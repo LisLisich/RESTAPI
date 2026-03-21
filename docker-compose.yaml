@@ -1,7 +1,6 @@
 services:
   todoapp-postgres:
-    user: "${UID}:${GID}" 
-    image:  postgres:18.1-bookworm
+    image: postgres:18.1-bookworm
     container_name: todoapp-env-postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -9,10 +8,29 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ${PROJECT_ROOT}/out/pgdata:/var/lib/postgresql
+    ports:
+      - "5432:5432"
     restart: always
+    networks:
+      - app-net
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
   
   todoapp-postgres-migrate: 
-    user: "${UID}:${GID}" 
     image: migrate/migrate:v4.19.1
     volumes:
     - ${PROJECT_ROOT}/migrations:/migrations
+    networks:
+      - app-net
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+    depends_on:
+      todoapp-postgres:
+        condition: service_healthy
+networks:
+  app-net:
+    driver: bridge

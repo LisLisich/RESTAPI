@@ -1,10 +1,6 @@
 services:
   todoapp-postgres:
-<<<<<<< HEAD
-    image: postgres:18.1-bookworm
-=======
-    image:  postgres:18.1-bookworm
->>>>>>> 0c0e436 (21.03 Созданны файлы миграции и подключение к PGAdmin)
+    image: postgres:18.1-bookworm  
     container_name: todoapp-env-postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -44,8 +40,4 @@ services:
 
 networks:
   app-net:
-<<<<<<< HEAD
-    driver: bridge
-=======
-    driver: bridge
->>>>>>> 0c0e436 (21.03 Созданны файлы миграции и подключение к PGAdmin)
+    driver: bridge  

@@ -1,6 +1,6 @@
 services:
   todoapp-postgres:
-    image: postgres:18.1-bookworm
+    image: postgres:18.1-bookworm  
     container_name: todoapp-env-postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -40,4 +40,4 @@ services:
 
 networks:
   app-net:
-    driver: bridge
+    driver: bridge  

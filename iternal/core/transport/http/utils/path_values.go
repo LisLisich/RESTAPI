@@ -21,7 +21,7 @@ func GetIntPathValue(r *http.Request, key string) (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf(
 			"path value='%s' by key='%s' not a valid interger: %v: %w",
-			val,
+			pathValue,
 			key,
 			err,
 			core_errors.ErrInvalidArgument,

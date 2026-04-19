@@ -10,7 +10,6 @@ import (
 	core_http_request "github.com/LisLisich/RESTAPI/iternal/core/transport/http/request"
 	core_http_response "github.com/LisLisich/RESTAPI/iternal/core/transport/http/response"
 	core_http_types "github.com/LisLisich/RESTAPI/iternal/core/transport/http/types"
-	core_http_utils "github.com/LisLisich/RESTAPI/iternal/core/transport/http/utils"
 )
 
 type PatchUserRequest struct {
@@ -48,7 +47,7 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
-	userID, err := core_http_utils.GetIntPathValue(r, "id")
+	userID, err := core_http_request.GetIntPathValue(r, "id")
 	if err != nil {
 		responseHandler.ErroResponse(
 			err,
@@ -90,8 +89,8 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 }
 
 func userPatchFromRequest(request PatchUserRequest) domain.UserPatch {
-	return domain.UserPatch{
-		FullName:    request.FullName.ToDomain(),
-		PhoneNumber: request.PhoneNumber.ToDomain(),
-	}
+	return domain.NewUSerPatch(
+		request.FullName.ToDomain(),
+		request.PhoneNumber.ToDomain(),
+	)
 }

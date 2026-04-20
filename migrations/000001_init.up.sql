@@ -15,14 +15,14 @@ CREATE TABLE todoapp.tasks (
     id SERIAL PRIMARY KEY,
     version BIGINT NOT NULL DEFAULT 1,
     title VARCHAR(100) NOT NULL CHECK(char_length(title) BETWEEN 1 AND 100),
-    descriptin VARCHAR(1000) CHECK(char_length(descriptin) BETWEEN 1 AND 1000),
-    comleted BOOLEAN NOT NULL,
-    craeted_at TIMESTAMPTZ NOT NULL,
+    description VARCHAR(1000) CHECK(char_length(description) BETWEEN 1 AND 1000),
+    completed BOOLEAN NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
     completed_at TIMESTAMPTZ,
     CHECK(
-        (comleted=FALSE AND completed_at IS NULL)
+        (completed=FALSE AND completed_at IS NULL)
         OR
-        (comleted=TRUE AND completed_at IS NOT NULL AND completed_at >= craeted_at)
+        (completed=TRUE AND completed_at IS NOT NULL AND completed_at >= created_at)
     ),
     author_user_id INTEGER NOT NULL REFERENCES todoapp.users(id)
 );

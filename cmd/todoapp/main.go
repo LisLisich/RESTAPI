@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	core_config "github.com/LisLisich/RESTAPI/internal/core/config"
 	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
 	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
@@ -21,12 +22,10 @@ import (
 	"go.uber.org/zap"
 )
 
-var (
-	timeZone = time.UTC
-)
-
 func main() {
-	time.Local = timeZone
+	cfg := core_config.NewConfigMust()
+	time.Local = cfg.TimeZone
+
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),
 		syscall.SIGINT, syscall.SIGTERM,
@@ -38,7 +37,7 @@ func main() {
 		os.Exit(1)
 	}
 	defer logger.Close()
-	logger.Debug("application time zone", zap.Any("zone", timeZone))
+	logger.Debug("application time zone", zap.Any("zone", time.Local))
 	logger.Debug("initializing postgres connection pool")
 	pool, err := core_pgx_pool.NewPool(
 		ctx,

@@ -6,18 +6,26 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
-	core_logger "github.com/LisLisich/RESTAPI/iternal/core/logger"
-	core_pgx_pool "github.com/LisLisich/RESTAPI/iternal/core/repository/postgres/pool/pgx"
-	core_http_middleware "github.com/LisLisich/RESTAPI/iternal/core/transport/http/middleware"
-	core_http_server "github.com/LisLisich/RESTAPI/iternal/core/transport/http/server"
-	users_postgres_repository "github.com/LisLisich/RESTAPI/iternal/features/users/repository/postgres"
-	users_servise "github.com/LisLisich/RESTAPI/iternal/features/users/servise"
-	users_transport_http "github.com/LisLisich/RESTAPI/iternal/features/users/transport/http"
+	core_config "github.com/LisLisich/RESTAPI/internal/core/config"
+	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
+	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
+	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
+	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	task_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/tasks/repository/postgres"
+	task_service "github.com/LisLisich/RESTAPI/internal/features/tasks/service"
+	tasks_transport_http "github.com/LisLisich/RESTAPI/internal/features/tasks/transport/http"
+	users_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/users/repository/postgres"
+	users_service "github.com/LisLisich/RESTAPI/internal/features/users/service"
+	users_transport_http "github.com/LisLisich/RESTAPI/internal/features/users/transport/http"
 	"go.uber.org/zap"
 )
 
 func main() {
+	cfg := core_config.NewConfigMust()
+	time.Local = cfg.TimeZone
+
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),
 		syscall.SIGINT, syscall.SIGTERM,
@@ -29,7 +37,7 @@ func main() {
 		os.Exit(1)
 	}
 	defer logger.Close()
-
+	logger.Debug("application time zone", zap.Any("zone", time.Local))
 	logger.Debug("initializing postgres connection pool")
 	pool, err := core_pgx_pool.NewPool(
 		ctx,
@@ -42,8 +50,13 @@ func main() {
 	defer pool.Close()
 	logger.Debug("initializing feature", zap.String("feature", "users"))
 	usersRepository := users_postgres_repository.NewUserRepository(pool)
-	usersService := users_servise.NewUserService(usersRepository)
+	usersService := users_service.NewUserService(usersRepository)
 	usersTransportHTTP := users_transport_http.NewUsersHTTPHadnler(usersService)
+
+	logger.Debug("initializing feature", zap.String("feature", "tasks"))
+	tasksRepository := task_postgres_repository.NewTaskRepository(pool)
+	tasksService := task_service.NewTasksService(tasksRepository)
+	tasksTransportHTTP := tasks_transport_http.NewTasksHTTPHandler(tasksService)
 
 	logger.Debug("initializing HTTP server")
 	httpServer := core_http_server.NewHTTPServer(
@@ -55,9 +68,11 @@ func main() {
 		core_http_middleware.Panic(),
 	)
 
-	apiVersionRouter := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion1)
-	apiVersionRouter.RegisterRoutes(usersTransportHTTP.Routes()...)
-	httpServer.RegisterAPIRouters(apiVersionRouter)
+	apiVersionRouterV1 := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion1)
+	apiVersionRouterV1.RegisterRoutes(usersTransportHTTP.Routes()...)
+	apiVersionRouterV1.RegisterRoutes(tasksTransportHTTP.Routes()...)
+
+	httpServer.RegisterAPIRouters(apiVersionRouterV1)
 
 	if err := httpServer.Run(ctx); err != nil {
 		logger.Error("HTTP server run error", zap.Error(err))

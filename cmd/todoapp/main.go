@@ -13,6 +13,9 @@ import (
 	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
 	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	statistics_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/statistics/repository/postgres"
+	statistics_service "github.com/LisLisich/RESTAPI/internal/features/statistics/service"
+	statistics_transport_http "github.com/LisLisich/RESTAPI/internal/features/statistics/transport/http"
 	task_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/tasks/repository/postgres"
 	task_service "github.com/LisLisich/RESTAPI/internal/features/tasks/service"
 	tasks_transport_http "github.com/LisLisich/RESTAPI/internal/features/tasks/transport/http"
@@ -58,6 +61,11 @@ func main() {
 	tasksService := task_service.NewTasksService(tasksRepository)
 	tasksTransportHTTP := tasks_transport_http.NewTasksHTTPHandler(tasksService)
 
+	logger.Debug("initializing feature", zap.String("initializing", "feature"))
+	statisticsRepository := statistics_postgres_repository.NewStatisticsRepository(pool)
+	statisticsService := statistics_service.NewStatisticsService(statisticsRepository)
+	ststisticsTransportHTTP := statistics_transport_http.NewStatisticsHTTPHandler(statisticsService)
+
 	logger.Debug("initializing HTTP server")
 	httpServer := core_http_server.NewHTTPServer(
 		core_http_server.NewConfigMust(),
@@ -71,6 +79,7 @@ func main() {
 	apiVersionRouterV1 := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion1)
 	apiVersionRouterV1.RegisterRoutes(usersTransportHTTP.Routes()...)
 	apiVersionRouterV1.RegisterRoutes(tasksTransportHTTP.Routes()...)
+	apiVersionRouterV1.RegisterRoutes(ststisticsTransportHTTP.Routes()...)
 
 	httpServer.RegisterAPIRouters(apiVersionRouterV1)
 

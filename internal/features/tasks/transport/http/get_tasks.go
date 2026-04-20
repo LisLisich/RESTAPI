@@ -19,7 +19,7 @@ func (h *TasksHTTPHandler) GetTasks(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		responseHandler.ErroResponse(
 			err,
-			"failed to get 'limit'/'offset' query param",
+			"failed to get 'userID','limit','offset' query param",
 		)
 		return
 	}

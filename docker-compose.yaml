@@ -1,6 +1,5 @@
 services:
   todoapp:
-    image: ghcr.io/lislisich/restapi:latest
     build:
       context: ${PROJECT_ROOT}
       dockerfile: ${PROJECT_ROOT}/cmd/todoapp/Dockerfile
@@ -23,9 +22,6 @@ services:
     restart: always
     networks:         
       - app-net
-    depends_on:
-      todoapp-postgres:
-        condition: service_healthy
 
   todoapp-postgres:
     image: postgres:18.1-bookworm  

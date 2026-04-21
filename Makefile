@@ -77,5 +77,8 @@ todoapp-deploy:
 	@sudo chmod -R 777 /home/foxster/VSC/RESTAPI/
 	@docker compose up -d --build todoapp
 
+todoapp-undeploy:
+	@docker compose down todoapp
+
 ps:
 	@docker compose ps

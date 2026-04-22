@@ -9,19 +9,31 @@ import (
 	core_http_response "github.com/LisLisich/RESTAPI/internal/core/transport/http/response"
 )
 
-type CretaeTaskRequest struct {
-	Title        string  `json:"title" validate:"required,min=1,max=100"`
-	Description  *string `json:"description" validate:"omitempty,min=1,max=1000"`
-	AuthorUserID int     `json:"author_user_id" validate:"required"`
+type CreateTaskRequest struct {
+	Title        string  `json:"title" validate:"required,min=1,max=100" example:"Домашнее задание"`
+	Description  *string `json:"description" validate:"omitempty,min=1,max=1000" example:"Сделать до четверга домашнее задание по математике"`
+	AuthorUserID int     `json:"author_user_id" validate:"required" example:"550e8400-e29b-41d4-a716-446655440000"`
 }
 
 type CreateTaskResponse TaskDTOResponse
 
+// CreateTask    godoc
+// @Summary      Создать задачу
+// @Description  Создать новую задачу в системе
+// @Tags         tasks
+// @Accept       json
+// @Produce      json
+// @Param        request  body      CreateTaskRequest   true  "CreateTask тело запроса"
+// @Success      201      {object}  CreateTaskResponse  "Успешно созданная задача"
+// @Failure      400      {object}  core_http_response.ErrorResponse "Bad request"
+// @Failure      404      {object} 	core_http_response.ErrorResponse "Author not found"
+// @Failure      500      {object}  core_http_response.ErrorResponse "Internal server error"
+// @Router       /tasks [post]
 func (h *TasksHTTPHandler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
-	var request CretaeTaskRequest
+	var request CreateTaskRequest
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
 		responseHandler.ErroResponse(err, "failed to decode and validate HTTP request")
 		return

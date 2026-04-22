@@ -63,6 +63,21 @@ services:
       - app-net
     restart: always 
 
+  swagger:
+    build:
+      context: ${PROJECT_ROOT}
+      dockerfile_inline: |
+        FROM golang:1.25.0-alpine
+        RUN apk add --no-cache git ca-certificates
+        ENV GOPROXY=https://proxy.golang.org,direct
+        ENV GIT_TERMINAL_PROMPT=0
+        RUN go install github.com/swaggo/swag/cmd/swag@v1.16.6
+        WORKDIR /code
+        ENTRYPOINT ["swag"]
+    volumes:
+      - ${PROJECT_ROOT}:/code
+    working_dir: /code 
+
 networks:
   app-net:
     driver: bridge  

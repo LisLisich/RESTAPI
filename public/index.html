@@ -1943,7 +1943,7 @@ async function submitTask() {
     } else {
         const authorId = document.getElementById('task-author-id').value.trim();
         if (!authorId) { toast('Author User ID is required', 'error'); return; }
-        const body = { title, author_user_id: authorId };
+        const body = { title, author_user_id: Number(authorId) };
         if (desc) body.description = desc;
         try {
             await api('/tasks', { method:'POST', body: JSON.stringify(body) });

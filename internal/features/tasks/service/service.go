@@ -43,10 +43,3 @@ func NewTasksService(
 		tasksRepository: tasksRepository,
 	}
 }
-
-func (s *TasksService) CreateTask(
-	ctx context.Context,
-	task domain.Task,
-) (domain.Task, error) {
-	return s.tasksRepository.CreateTask(ctx, task)
-}

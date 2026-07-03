@@ -39,13 +39,13 @@ func NewTaskPatch(
 func (p *TaskPatch) Validate() error {
 	if p.Title.Set && p.Title.Value == nil {
 		return fmt.Errorf(
-			"`Title` cont't be patched to NULL: %w",
+			"`Title` can't be patched to NULL: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}
 	if p.Completed.Set && p.Completed.Value == nil {
 		return fmt.Errorf(
-			"`Completed` cont't be patched to NULL: %w",
+			"`Completed` can't be patched to NULL: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}
@@ -157,7 +157,7 @@ func (t *Task) Validate() error {
 		}
 		if t.CompletedAt.Before(t.CreatedAt) {
 			return fmt.Errorf(
-				"`CompletedAt` can't be before `CretaedAt`: %w",
+				"`CompletedAt` can't be before `CreatedAt`: %w",
 				core_errors.ErrInvalidArgument,
 			)
 		}

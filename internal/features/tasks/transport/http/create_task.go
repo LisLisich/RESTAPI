@@ -35,7 +35,7 @@ func (h *TasksHTTPHandler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	var request CreateTaskRequest
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
-		responseHandler.ErroResponse(err, "failed to decode and validate HTTP request")
+		responseHandler.ErrorResponse(err, "failed to decode and validate HTTP request")
 		return
 	}
 	taskDomain := domain.NewTaskUninitialized(
@@ -45,7 +45,7 @@ func (h *TasksHTTPHandler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 	)
 	taskDomain, err := h.tasksService.CreateTask(ctx, taskDomain)
 	if err != nil {
-		responseHandler.ErroResponse(err, "failed to create task")
+		responseHandler.ErrorResponse(err, "failed to create task")
 		return
 	}
 	response := CreateTaskResponse(taskDTOFromDomain(taskDomain))

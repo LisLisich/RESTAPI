@@ -30,14 +30,14 @@ func (h *StatisticsHTTPHandler) GetStatistics(rw http.ResponseWriter, r *http.Re
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	userID, from, to, err := getUserIDFromToQueryParams(r)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get 'userID'/'from'/'to' query param",
 		)
 	}
 	statisticsDomain, err := h.statisticsService.GetStatistics(ctx, userID, from, to)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get statistics",
 		)

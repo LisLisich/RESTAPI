@@ -87,7 +87,7 @@ func NewUserPatch(
 func (p *UserPatch) Validate() error {
 	if p.FullName.Set && p.FullName.Value == nil {
 		return fmt.Errorf(
-			"`FullName` cont't be patched to NULL: %w",
+			"`FullName` can't be patched to NULL: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}

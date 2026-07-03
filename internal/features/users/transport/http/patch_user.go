@@ -68,7 +68,7 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	userID, err := core_http_request.GetIntPathValue(r, "id")
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get userID path value",
 		)
@@ -77,7 +77,7 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 
 	var request PatchUserRequest
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to decode and validate HTTP request",
 		)
@@ -87,7 +87,7 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 	userPatch := userPatchFromRequest(request)
 	userDomain, err := h.usersService.PatchUser(ctx, userID, userPatch)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to patch user",
 		)

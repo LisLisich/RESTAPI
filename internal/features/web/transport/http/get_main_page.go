@@ -13,7 +13,7 @@ func (h *WebHTTPHandler) GetMainPage(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	html, err := h.webService.GetMainPage()
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get index.html for main page",
 		)

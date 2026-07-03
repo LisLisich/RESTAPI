@@ -16,13 +16,13 @@ func (s *TasksService) GetTasks(
 ) ([]domain.Task, error) {
 	if limit != nil && *limit < 0 {
 		return nil, fmt.Errorf(
-			"limit must be non-negativ: %w",
+			"limit must be non-negative: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}
 	if offset != nil && *offset < 0 {
 		return nil, fmt.Errorf(
-			"offset must be non-negativ: %w",
+			"offset must be non-negative: %w",
 			core_errors.ErrInvalidArgument,
 		)
 	}

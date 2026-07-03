@@ -37,7 +37,7 @@ type UsersService interface {
 	) (domain.User, error)
 }
 
-func NewUsersHTTPHadnler(
+func NewUsersHTTPHandler(
 	usersService UsersService,
 ) *UsersHTTPHandler {
 	return &UsersHTTPHandler{

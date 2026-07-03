@@ -48,7 +48,7 @@ func (h *HTTPResponseHandler) HTMLResponse(html []byte) {
 	}
 }
 
-func (h *HTTPResponseHandler) ErroResponse(err error, msg string) {
+func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
 	var (
 		statusCode int
 		logFunc    func(string, ...zap.Field)

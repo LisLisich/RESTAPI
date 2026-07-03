@@ -33,13 +33,13 @@ func (h *UsersHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	var request CreateUserRequest
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
-		responseHandler.ErroResponse(err, "failed to decode and validate HTTP request")
+		responseHandler.ErrorResponse(err, "failed to decode and validate HTTP request")
 		return
 	}
 	userDomain := domainFromDTO(request)
 	userDomain, err := h.usersService.CreateUser(ctx, userDomain)
 	if err != nil {
-		responseHandler.ErroResponse(err, "failed to create user")
+		responseHandler.ErrorResponse(err, "failed to create user")
 		return
 	}
 	response := CreateUserResponse(userDTOFromDomain(userDomain))

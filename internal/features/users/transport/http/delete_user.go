@@ -24,14 +24,14 @@ func (h *UsersHTTPHandler) DeleteUser(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	userID, err := core_http_request.GetIntPathValue(r, "id")
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get userID path value",
 		)
 		return
 	}
 	if err := h.usersService.DeleteUser(ctx, userID); err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to delete user",
 		)

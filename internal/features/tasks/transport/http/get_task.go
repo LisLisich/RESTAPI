@@ -27,7 +27,7 @@ func (h *TasksHTTPHandler) GetTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	taskID, err := core_http_request.GetIntPathValue(r, "id")
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get taskID path value",
 		)
@@ -35,7 +35,7 @@ func (h *TasksHTTPHandler) GetTask(rw http.ResponseWriter, r *http.Request) {
 	}
 	taskDomain, err := h.tasksService.GetTask(ctx, taskID)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get user",
 		)

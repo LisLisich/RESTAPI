@@ -64,7 +64,7 @@ func main() {
 	logger.Debug("initializing feature", zap.String("feature", "users"))
 	usersRepository := users_postgres_repository.NewUserRepository(pool)
 	usersService := users_service.NewUserService(usersRepository)
-	usersTransportHTTP := users_transport_http.NewUsersHTTPHadnler(usersService)
+	usersTransportHTTP := users_transport_http.NewUsersHTTPHandler(usersService)
 
 	logger.Debug("initializing feature", zap.String("feature", "tasks"))
 	tasksRepository := task_postgres_repository.NewTaskRepository(pool)
@@ -74,7 +74,7 @@ func main() {
 	logger.Debug("initializing feature", zap.String("initializing", "feature"))
 	statisticsRepository := statistics_postgres_repository.NewStatisticsRepository(pool)
 	statisticsService := statistics_service.NewStatisticsService(statisticsRepository)
-	ststisticsTransportHTTP := statistics_transport_http.NewStatisticsHTTPHandler(statisticsService)
+	statisticsTransportHTTP := statistics_transport_http.NewStatisticsHTTPHandler(statisticsService)
 
 	logger.Debug("initializing feature", zap.String("feature", "web"))
 	webRepository := web_fs_repository.NewWebRepository()
@@ -96,12 +96,12 @@ func main() {
 	apiVersionRouterV1 := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion1)
 	apiVersionRouterV1.RegisterRoutes(usersTransportHTTP.Routes()...)
 	apiVersionRouterV1.RegisterRoutes(tasksTransportHTTP.Routes()...)
-	apiVersionRouterV1.RegisterRoutes(ststisticsTransportHTTP.Routes()...)
+	apiVersionRouterV1.RegisterRoutes(statisticsTransportHTTP.Routes()...)
 
 	httpServer.RegisterAPIRouters(
 		apiVersionRouterV1,
 	)
-	httpServer.RegisterRoytes(webTransportHTTP.Routes()...)
+	httpServer.RegisterRoutes(webTransportHTTP.Routes()...)
 	httpServer.RegisterSwagger()
 
 	if err := httpServer.Run(ctx); err != nil {

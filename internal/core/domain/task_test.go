@@ -172,3 +172,70 @@ func TestTaskValidateCompletionState(t *testing.T) {
 		})
 	}
 }
+
+func TestTaskPatchValidateNullableFields(t *testing.T) {
+	tests := []struct {
+		name    string
+		patch   TaskPatch
+		wantErr bool
+	}{
+		{
+			name: "title null",
+			patch: NewTaskPatch(
+				Nullable[string]{
+					Set:   true,
+					Value: nil,
+				},
+				Nullable[string]{},
+				Nullable[bool]{},
+			),
+			wantErr: true,
+		},
+		{
+			name: "completed null",
+			patch: NewTaskPatch(
+				Nullable[string]{},
+				Nullable[string]{},
+				Nullable[bool]{
+					Set:   true,
+					Value: nil,
+				},
+			),
+			wantErr: true,
+		},
+		{
+			name: "description null",
+			patch: NewTaskPatch(
+				Nullable[string]{},
+				Nullable[string]{
+					Set:   true,
+					Value: nil,
+				},
+				Nullable[bool]{},
+			),
+			wantErr: false,
+		},
+		{
+			name: "all fields absent",
+			patch: NewTaskPatch(
+				Nullable[string]{},
+				Nullable[string]{},
+				Nullable[bool]{},
+			),
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.patch.Validate()
+
+			if tt.wantErr && !errors.Is(err, core_errors.ErrInvalidArgument) {
+				t.Fatalf("expected ErrInvalidArgument, got %v", err)
+			}
+			if !tt.wantErr && err != nil {
+				t.Fatalf("expected no error, got %v", err)
+			}
+		})
+	}
+}

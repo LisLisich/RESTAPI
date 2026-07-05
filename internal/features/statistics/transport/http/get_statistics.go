@@ -34,6 +34,7 @@ func (h *StatisticsHTTPHandler) GetStatistics(rw http.ResponseWriter, r *http.Re
 			err,
 			"failed to get 'userID'/'from'/'to' query param",
 		)
+		return
 	}
 	statisticsDomain, err := h.statisticsService.GetStatistics(ctx, userID, from, to)
 	if err != nil {
@@ -41,6 +42,7 @@ func (h *StatisticsHTTPHandler) GetStatistics(rw http.ResponseWriter, r *http.Re
 			err,
 			"failed to get statistics",
 		)
+		return
 	}
 	response := StatisticsDTOFromDomain(statisticsDomain)
 	responseHandler.JSONResponse(response, http.StatusOK)

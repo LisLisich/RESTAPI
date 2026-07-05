@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/LisLisich/RESTAPI/internal/core/domain"
 	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
@@ -15,6 +16,25 @@ import (
 type fakeTasksService struct {
 	createTaskCalled bool
 	createdTask      domain.Task
+
+	getTasksCalled bool
+	getTasksUserID *int
+	getTasksLimit  *int
+	getTasksOffset *int
+	getTasksErr    error
+
+	getTaskCalled bool
+	gotTaskID     int
+	getTaskErr    error
+
+	deleteTaskCalled bool
+	deletedTaskID    int
+	deleteTaskErr    error
+
+	patchTaskCalled bool
+	patchedTaskID   int
+	patchedPatch    domain.TaskPatch
+	patchTaskErr    error
 }
 
 var _ TasksService = (*fakeTasksService)(nil)
@@ -44,20 +64,46 @@ func (s *fakeTasksService) GetTasks(
 	limit *int,
 	offset *int,
 ) ([]domain.Task, error) {
-	return nil, nil
+	s.getTasksCalled = true
+	s.getTasksUserID = userID
+	s.getTasksLimit = limit
+	s.getTasksOffset = offset
+
+	if s.getTasksErr != nil {
+		return nil, s.getTasksErr
+	}
+
+	return []domain.Task{
+		newTask(10, 1, "first task"),
+		newTask(11, 1, "second task"),
+	}, nil
 }
 
 func (s *fakeTasksService) GetTask(
 	ctx context.Context,
 	id int,
 ) (domain.Task, error) {
-	return domain.Task{}, nil
+	s.getTaskCalled = true
+	s.gotTaskID = id
+
+	if s.getTaskErr != nil {
+		return domain.Task{}, s.getTaskErr
+	}
+
+	return newTask(id, 1, "found task"), nil
 }
 
 func (s *fakeTasksService) DeleteTask(
 	ctx context.Context,
 	id int,
 ) error {
+	s.deleteTaskCalled = true
+	s.deletedTaskID = id
+
+	if s.deleteTaskErr != nil {
+		return s.deleteTaskErr
+	}
+
 	return nil
 }
 
@@ -66,7 +112,15 @@ func (s *fakeTasksService) PatchTask(
 	id int,
 	patch domain.TaskPatch,
 ) (domain.Task, error) {
-	return domain.Task{}, nil
+	s.patchTaskCalled = true
+	s.patchedTaskID = id
+	s.patchedPatch = patch
+
+	if s.patchTaskErr != nil {
+		return domain.Task{}, s.patchTaskErr
+	}
+
+	return newPatchedTask(id), nil
 }
 
 func TestCreateTaskReturnsCreatedOnValidRequest(t *testing.T) {
@@ -118,13 +172,47 @@ func TestCreateTaskReturnsBadRequestOnInvalidRequest(t *testing.T) {
 }
 
 func newCreateTaskRequest(body string) *http.Request {
-	request := httptest.NewRequest(
+	return newRequestWithLogger(
 		http.MethodPost,
 		"/tasks",
 		strings.NewReader(body),
 	)
+}
+
+func newRequestWithLogger(method string, target string, body *strings.Reader) *http.Request {
+	request := httptest.NewRequest(method, target, body)
 	logger := &core_logger.Logger{
 		Logger: zap.NewNop(),
 	}
 	return request.WithContext(core_logger.ToContext(request.Context(), logger))
+}
+
+func ptr[T any](value T) *T {
+	return &value
+}
+
+func newTask(id int, authorUserID int, title string) domain.Task {
+	return domain.NewTask(
+		id,
+		1,
+		title,
+		ptr("description"),
+		false,
+		time.Date(2026, 7, 3, 12, 0, 0, 0, time.UTC),
+		nil,
+		authorUserID,
+	)
+}
+
+func newPatchedTask(id int) domain.Task {
+	return domain.NewTask(
+		id,
+		2,
+		"new title",
+		nil,
+		true,
+		time.Date(2026, 7, 3, 12, 0, 0, 0, time.UTC),
+		ptr(time.Date(2026, 7, 3, 12, 1, 0, 0, time.UTC)),
+		1,
+	)
 }

@@ -37,7 +37,7 @@ func (h *TasksHTTPHandler) GetTask(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		responseHandler.ErrorResponse(
 			err,
-			"failed to get user",
+			"failed to get task",
 		)
 		return
 	}

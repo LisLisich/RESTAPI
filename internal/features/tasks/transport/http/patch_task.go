@@ -103,7 +103,6 @@ func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 			request.Completed,
 		),
 	)
-	rw.WriteHeader(http.StatusOK)
 }
 
 func taskPatchFromRequest(request PatchTaskRequest) domain.TaskPatch {

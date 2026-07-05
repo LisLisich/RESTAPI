@@ -54,7 +54,7 @@ func (p *TaskPatch) Validate() error {
 
 func (t *Task) ApplyPatch(patch TaskPatch) error {
 	if err := patch.Validate(); err != nil {
-		return fmt.Errorf("validate user patch: %w", err)
+		return fmt.Errorf("validate task patch: %w", err)
 	}
 	tmp := *t
 	if patch.Title.Set {

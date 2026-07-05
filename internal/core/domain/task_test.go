@@ -239,3 +239,169 @@ func TestTaskPatchValidateNullableFields(t *testing.T) {
 		})
 	}
 }
+
+func TestTaskApplyPatchUpdatesOnlySetFields(t *testing.T) {
+	createdAt := time.Date(2026, 7, 3, 12, 0, 0, 0, time.UTC)
+	task := NewTask(
+		1,
+		1,
+		"old title",
+		stringPtr("old description"),
+		false,
+		createdAt,
+		nil,
+		1,
+	)
+	patch := NewTaskPatch(
+		Nullable[string]{
+			Set:   true,
+			Value: stringPtr("new title"),
+		},
+		Nullable[string]{
+			Set:   true,
+			Value: nil,
+		},
+		Nullable[bool]{
+			Set:   true,
+			Value: boolPtr(true),
+		},
+	)
+
+	err := task.ApplyPatch(patch)
+
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+	if task.Title != "new title" {
+		t.Fatalf("expected title %q, got %q", "new title", task.Title)
+	}
+	if task.Description != nil {
+		t.Fatalf("expected description to be nil, got %q", *task.Description)
+	}
+	if !task.Completed {
+		t.Fatal("expected task to be completed")
+	}
+	if task.CompletedAt == nil {
+		t.Fatal("expected completed task to have CompletedAt")
+	}
+	if task.CompletedAt.Before(createdAt) {
+		t.Fatalf("expected CompletedAt to be after CreatedAt, got %v before %v", task.CompletedAt, createdAt)
+	}
+}
+
+func TestTaskApplyPatchDoesNotPartiallyMutateOnInvalidResult(t *testing.T) {
+	task := NewTaskUninitialized("old title", stringPtr("old description"), 1)
+	patch := NewTaskPatch(
+		Nullable[string]{
+			Set:   true,
+			Value: stringPtr("ab"),
+		},
+		Nullable[string]{
+			Set:   true,
+			Value: nil,
+		},
+		Nullable[bool]{},
+	)
+
+	err := task.ApplyPatch(patch)
+
+	if !errors.Is(err, core_errors.ErrInvalidArgument) {
+		t.Fatalf("expected ErrInvalidArgument, got %v", err)
+	}
+	if task.Title != "old title" {
+		t.Fatalf("expected title to remain %q, got %q", "old title", task.Title)
+	}
+	if task.Description == nil || *task.Description != "old description" {
+		t.Fatalf("expected description to remain %q, got %v", "old description", task.Description)
+	}
+}
+
+func TestTaskApplyPatchWrapsPatchValidationWithTaskContext(t *testing.T) {
+	task := NewTaskUninitialized("old title", nil, 1)
+	patch := NewTaskPatch(
+		Nullable[string]{
+			Set:   true,
+			Value: nil,
+		},
+		Nullable[string]{},
+		Nullable[bool]{},
+	)
+
+	err := task.ApplyPatch(patch)
+
+	if !errors.Is(err, core_errors.ErrInvalidArgument) {
+		t.Fatalf("expected ErrInvalidArgument, got %v", err)
+	}
+	if !strings.Contains(err.Error(), "validate task patch") {
+		t.Fatalf("expected error to contain %q, got %q", "validate task patch", err.Error())
+	}
+}
+
+func TestTaskCompletionDuration(t *testing.T) {
+	createdAt := time.Date(2026, 7, 3, 12, 0, 0, 0, time.UTC)
+	completedAt := createdAt.Add(2 * time.Hour)
+
+	tests := []struct {
+		name         string
+		completed    bool
+		completedAt  *time.Time
+		wantDuration *time.Duration
+	}{
+		{
+			name:         "not completed",
+			completed:    false,
+			completedAt:  nil,
+			wantDuration: nil,
+		},
+		{
+			name:         "completed without completed at",
+			completed:    true,
+			completedAt:  nil,
+			wantDuration: nil,
+		},
+		{
+			name:         "completed with completed at",
+			completed:    true,
+			completedAt:  &completedAt,
+			wantDuration: durationPtr(2 * time.Hour),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			task := NewTask(
+				1,
+				1,
+				"valid title",
+				nil,
+				tt.completed,
+				createdAt,
+				tt.completedAt,
+				1,
+			)
+
+			duration := task.CompletionDuration()
+
+			if tt.wantDuration == nil {
+				if duration != nil {
+					t.Fatalf("expected nil duration, got %v", *duration)
+				}
+				return
+			}
+			if duration == nil {
+				t.Fatalf("expected duration %v, got nil", *tt.wantDuration)
+			}
+			if *duration != *tt.wantDuration {
+				t.Fatalf("expected duration %v, got %v", *tt.wantDuration, *duration)
+			}
+		})
+	}
+}
+
+func boolPtr(value bool) *bool {
+	return &value
+}
+
+func durationPtr(value time.Duration) *time.Duration {
+	return &value
+}

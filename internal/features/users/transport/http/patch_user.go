@@ -104,7 +104,6 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 			request.PhoneNumber,
 		),
 	)
-	rw.WriteHeader(http.StatusOK)
 }
 
 func userPatchFromRequest(request PatchUserRequest) domain.UserPatch {

@@ -34,12 +34,20 @@ func Logger(log *core_logger.Logger) Middleware {
 			requestID := r.Header.Get(requestIDHeader)
 			l := log.With(
 				zap.String("request_id", requestID),
-				zap.String("url", r.URL.String()),
+				zap.String("url", requestPathForLog(r)),
 			)
 			ctx := core_logger.ToContext(r.Context(), l)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func requestPathForLog(r *http.Request) string {
+	path := r.URL.EscapedPath()
+	if path == "" {
+		return "/"
+	}
+	return path
 }
 
 func CORS(allowedOriginsList []string) Middleware {
@@ -53,7 +61,10 @@ func CORS(allowedOriginsList []string) Middleware {
 			if _, ok := allowedOrigins[origin]; ok {
 				w.Header().Set("Access-Control-Allow-Origin", origin)
 				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
-				w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+				w.Header().Set(
+					"Access-Control-Allow-Headers",
+					"Content-Type, Authorization, X-CSRF-Token, Idempotency-Key",
+				)
 			}
 			if r.Method == http.MethodOptions {
 				w.WriteHeader(http.StatusOK)

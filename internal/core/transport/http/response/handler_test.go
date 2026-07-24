@@ -1,6 +1,7 @@
 package core_http_response
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -77,6 +78,27 @@ func TestJSONResponseWritesStatusAndBody(t *testing.T) {
 	}
 	if response.Body.String() != "{\"status\":\"ok\"}\n" {
 		t.Fatalf("expected json body, got %q", response.Body.String())
+	}
+}
+
+func TestErrorResponseDoesNotExposeInternalError(t *testing.T) {
+	response := httptest.NewRecorder()
+	handler := NewHTTPResponseHandler(newNopLogger(), response)
+
+	handler.ErrorResponse(errors.New("password=secret db=production"), "request failed")
+
+	var body ErrorResponse
+	if err := json.Unmarshal(response.Body.Bytes(), &body); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if body.Error != http.StatusText(http.StatusInternalServerError) {
+		t.Fatalf("expected public status text, got %q", body.Error)
+	}
+	if body.Message != "request failed" {
+		t.Fatalf("expected public message, got %q", body.Message)
+	}
+	if body.Error == "password=secret db=production" {
+		t.Fatal("internal error was exposed")
 	}
 }
 

@@ -12,6 +12,12 @@
 
 	log {
 		output stdout
-		format json
+		format filter {
+			request>uri query {
+				replace code REDACTED
+				replace state REDACTED
+			}
+			wrap json
+		}
 	}
 }

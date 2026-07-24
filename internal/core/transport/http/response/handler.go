@@ -77,7 +77,6 @@ func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
 	logFunc(msg, zap.Error(err))
 	h.errorResponse(
 		statusCode,
-		err,
 		msg,
 	)
 }
@@ -88,18 +87,16 @@ func (h *HTTPResponseHandler) PanicResponse(p any, msg string) {
 	h.log.Error(msg, zap.Error(err))
 	h.errorResponse(
 		statusCode,
-		err,
 		msg,
 	)
 }
 
 func (h *HTTPResponseHandler) errorResponse(
 	statusCode int,
-	err error,
 	msg string,
 ) {
 	response := ErrorResponse{
-		Error:   err.Error(),
+		Error:   http.StatusText(statusCode),
 		Message: msg,
 	}
 

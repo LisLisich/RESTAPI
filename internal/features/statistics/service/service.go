@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 type StatisticsService struct {

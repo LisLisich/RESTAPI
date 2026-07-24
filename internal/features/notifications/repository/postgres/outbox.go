@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_postgres_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool"
-	notifications_service "github.com/LisLisich/RESTAPI/internal/features/notifications/service"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_postgres_pool "github.com/LisLisich/fintask/internal/core/repository/postgres/pool"
+	notifications_service "github.com/LisLisich/fintask/internal/features/notifications/service"
 )
 
 func (repository *NotificationRepository) ClaimNext(

@@ -3,7 +3,7 @@ package tasks_service
 import (
 	"context"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 type TasksService struct {

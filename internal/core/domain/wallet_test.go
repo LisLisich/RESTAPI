@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
 )
 
 func TestNewWalletAcceptsNonNegativeRUBBalance(t *testing.T) {

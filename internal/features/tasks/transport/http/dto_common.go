@@ -3,7 +3,7 @@ package tasks_transport_http
 import (
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 type TaskDTOResponse struct {

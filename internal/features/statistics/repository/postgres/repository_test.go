@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	core_postgres_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool"
+	core_postgres_pool "github.com/LisLisich/fintask/internal/core/repository/postgres/pool"
 )
 
 type fakePool struct {

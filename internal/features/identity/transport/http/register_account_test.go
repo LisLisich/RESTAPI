@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
 	"go.uber.org/zap"
 )
 

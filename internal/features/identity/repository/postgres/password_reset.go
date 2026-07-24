@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"time"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_postgres_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool"
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_postgres_pool "github.com/LisLisich/fintask/internal/core/repository/postgres/pool"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
 )
 
 const passwordResetTopic = "identity.password_reset_requested"

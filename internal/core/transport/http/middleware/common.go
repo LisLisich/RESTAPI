@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	core_http_response "github.com/LisLisich/RESTAPI/internal/core/transport/http/response"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	core_http_response "github.com/LisLisich/fintask/internal/core/transport/http/response"
 	"github.com/gofrs/uuid"
 	"go.uber.org/zap"
 )

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	core_postgres_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool"
+	core_postgres_pool "github.com/LisLisich/fintask/internal/core/repository/postgres/pool"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )

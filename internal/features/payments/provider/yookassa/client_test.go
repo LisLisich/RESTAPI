@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 func TestClientCreatesRedirectPayment(t *testing.T) {

@@ -3,9 +3,9 @@ package health_transport_http
 import (
 	"net/http"
 
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	core_http_response "github.com/LisLisich/RESTAPI/internal/core/transport/http/response"
-	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	core_http_response "github.com/LisLisich/fintask/internal/core/transport/http/response"
+	core_http_server "github.com/LisLisich/fintask/internal/core/transport/http/server"
 )
 
 type HealthHTTPHandler struct{}

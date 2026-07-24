@@ -7,10 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	identity_jwt_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/jwt"
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	identity_jwt_provider "github.com/LisLisich/fintask/internal/features/identity/provider/jwt"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
 	"go.uber.org/zap"
 )
 

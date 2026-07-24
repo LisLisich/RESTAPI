@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
 )
 
 func TestLoginSetsProtectedSessionAndCSRFCookies(t *testing.T) {

@@ -3,7 +3,7 @@ package statistics_postgres_repository
 import (
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 type TaskModel struct {

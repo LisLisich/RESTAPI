@@ -1,4 +1,4 @@
-module github.com/LisLisich/RESTAPI
+module github.com/LisLisich/fintask
 
 go 1.25.12
 

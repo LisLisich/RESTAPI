@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 func (s *TasksService) GetTask(

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, fintask-showcase]
+    branches: [main]
     tags: ["v*"]
   pull_request:
 

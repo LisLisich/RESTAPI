@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/cli"
+	"github.com/LisLisich/fintask/internal/cli"
 )
 
 const defaultAPIURL = "http://localhost:5050"

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
 	"github.com/coreos/go-oidc/v3/oidc"
 	"golang.org/x/oauth2"
 )

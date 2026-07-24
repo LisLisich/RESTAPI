@@ -3,7 +3,7 @@ package domain
 import (
 	"fmt"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
 )
 
 type Currency string

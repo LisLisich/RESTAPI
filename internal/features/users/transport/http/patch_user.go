@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	core_http_request "github.com/LisLisich/RESTAPI/internal/core/transport/http/request"
-	core_http_response "github.com/LisLisich/RESTAPI/internal/core/transport/http/response"
-	core_http_types "github.com/LisLisich/RESTAPI/internal/core/transport/http/types"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	core_http_request "github.com/LisLisich/fintask/internal/core/transport/http/request"
+	core_http_response "github.com/LisLisich/fintask/internal/core/transport/http/response"
+	core_http_types "github.com/LisLisich/fintask/internal/core/transport/http/types"
 )
 
 type PatchUserRequest struct {

@@ -7,10 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
-	identity_http_middleware "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http/middleware"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
+	identity_http_middleware "github.com/LisLisich/fintask/internal/features/identity/transport/http/middleware"
 	"go.uber.org/zap"
 )
 

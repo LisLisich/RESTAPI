@@ -1,6 +1,6 @@
 package wallet_postgres_repository
 
-import core_postgres_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool"
+import core_postgres_pool "github.com/LisLisich/fintask/internal/core/repository/postgres/pool"
 
 type WalletRepository struct {
 	pool core_postgres_pool.Pool

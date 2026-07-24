@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
 )
 
 type RegisterAccountInput struct {

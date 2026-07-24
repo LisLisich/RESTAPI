@@ -32,6 +32,7 @@ type IdentityService interface {
 
 type IdentityHTTPHandler struct {
 	identityService     IdentityService
+	googleLoginService  *identity_service.GoogleLoginService
 	protectedMiddleware core_http_middleware.Middleware
 }
 
@@ -46,8 +47,14 @@ func NewIdentityHTTPHandler(
 	return handler
 }
 
+func (h *IdentityHTTPHandler) SetGoogleLoginService(
+	service *identity_service.GoogleLoginService,
+) {
+	h.googleLoginService = service
+}
+
 func (h *IdentityHTTPHandler) Routes() []core_http_server.Route {
-	return []core_http_server.Route{
+	routes := []core_http_server.Route{
 		{
 			Method:  http.MethodPost,
 			Path:    "/auth/register",
@@ -90,6 +97,22 @@ func (h *IdentityHTTPHandler) Routes() []core_http_server.Route {
 			Handler: h.RefreshAPI,
 		},
 	}
+	if h.googleLoginService != nil {
+		routes = append(
+			routes,
+			core_http_server.Route{
+				Method:  http.MethodGet,
+				Path:    "/auth/google/start",
+				Handler: h.StartGoogleLogin,
+			},
+			core_http_server.Route{
+				Method:  http.MethodGet,
+				Path:    "/auth/google/callback",
+				Handler: h.CompleteGoogleLogin,
+			},
+		)
+	}
+	return routes
 }
 
 func (h *IdentityHTTPHandler) protectedRouteMiddleware() []core_http_middleware.Middleware {

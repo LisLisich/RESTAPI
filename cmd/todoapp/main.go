@@ -15,6 +15,7 @@ import (
 	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
 	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	identity_google_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/googleoidc"
 	identity_jwt_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/jwt"
 	identity_password_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/password"
 	identity_token_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/token"
@@ -113,6 +114,25 @@ func main() {
 		identityService,
 		authenticationMiddleware,
 	)
+	googleConfig := identity_google_provider.NewConfigMust()
+	if googleConfig.Enabled {
+		googleClient, err := identity_google_provider.NewClient(
+			ctx,
+			googleConfig,
+			&http.Client{Timeout: 15 * time.Second},
+		)
+		if err != nil {
+			logger.Fatal("failed to initialize Google OIDC", zap.Error(err))
+		}
+		identityTransportHTTP.SetGoogleLoginService(
+			identity_service.NewGoogleLoginService(
+				identityRepository,
+				googleClient,
+				verificationTokenIssuer,
+				time.Now,
+			),
+		)
+	}
 
 	logger.Debug("initializing feature", zap.String("feature", "users"))
 	usersRepository := users_postgres_repository.NewUserRepository(pool)

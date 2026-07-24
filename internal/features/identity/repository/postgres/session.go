@@ -126,3 +126,23 @@ func (r *IdentityRepository) GetSession(
 
 	return session, nil
 }
+
+func (r *IdentityRepository) RevokeSession(
+	ctx context.Context,
+	tokenHash []byte,
+	revokedAt time.Time,
+) error {
+	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
+	defer cancel()
+
+	const query = `
+		UPDATE todoapp.sessions
+		SET revoked_at = $2
+		WHERE token_hash = $1
+			AND revoked_at IS NULL;
+	`
+	if _, err := r.pool.Exec(ctx, query, tokenHash, revokedAt); err != nil {
+		return fmt.Errorf("revoke browser session: %w", err)
+	}
+	return nil
+}

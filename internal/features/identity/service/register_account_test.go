@@ -34,6 +34,21 @@ type fakeRegistrationRepository struct {
 	sessionHash []byte
 	sessionNow  time.Time
 	sessionErr  error
+
+	passwordResetCalled  bool
+	passwordResetRequest PasswordResetRequest
+	passwordResetErr     error
+
+	resetPasswordCalled bool
+	resetTokenHash      []byte
+	resetPasswordHash   string
+	resetAt             time.Time
+	resetPasswordErr    error
+
+	revokeSessionCalled bool
+	revokeSessionHash   []byte
+	revokeSessionAt     time.Time
+	revokeSessionErr    error
 }
 
 func (r *fakeRegistrationRepository) Register(
@@ -84,6 +99,39 @@ func (r *fakeRegistrationRepository) GetSession(
 		return StoredAuthenticationSession{}, r.sessionErr
 	}
 	return r.authSession, nil
+}
+
+func (r *fakeRegistrationRepository) RequestPasswordReset(
+	_ context.Context,
+	request PasswordResetRequest,
+) error {
+	r.passwordResetCalled = true
+	r.passwordResetRequest = request
+	return r.passwordResetErr
+}
+
+func (r *fakeRegistrationRepository) ResetPassword(
+	_ context.Context,
+	tokenHash []byte,
+	passwordHash string,
+	resetAt time.Time,
+) error {
+	r.resetPasswordCalled = true
+	r.resetTokenHash = tokenHash
+	r.resetPasswordHash = passwordHash
+	r.resetAt = resetAt
+	return r.resetPasswordErr
+}
+
+func (r *fakeRegistrationRepository) RevokeSession(
+	_ context.Context,
+	tokenHash []byte,
+	revokedAt time.Time,
+) error {
+	r.revokeSessionCalled = true
+	r.revokeSessionHash = tokenHash
+	r.revokeSessionAt = revokedAt
+	return r.revokeSessionErr
 }
 
 func (r *fakeRegistrationRepository) VerifyEmail(

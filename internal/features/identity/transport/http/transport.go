@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
 	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
 	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
 )
@@ -19,14 +20,25 @@ type IdentityService interface {
 		ctx context.Context,
 		input identity_service.LoginInput,
 	) (identity_service.BrowserSession, error)
+	RequestPasswordReset(ctx context.Context, email string) error
+	ResetPassword(ctx context.Context, rawToken string, newPassword string) error
+	Logout(ctx context.Context, rawSessionToken string) error
 }
 
 type IdentityHTTPHandler struct {
-	identityService IdentityService
+	identityService     IdentityService
+	protectedMiddleware core_http_middleware.Middleware
 }
 
-func NewIdentityHTTPHandler(identityService IdentityService) *IdentityHTTPHandler {
-	return &IdentityHTTPHandler{identityService: identityService}
+func NewIdentityHTTPHandler(
+	identityService IdentityService,
+	protectedMiddleware ...core_http_middleware.Middleware,
+) *IdentityHTTPHandler {
+	handler := &IdentityHTTPHandler{identityService: identityService}
+	if len(protectedMiddleware) > 0 {
+		handler.protectedMiddleware = protectedMiddleware[0]
+	}
+	return handler
 }
 
 func (h *IdentityHTTPHandler) Routes() []core_http_server.Route {
@@ -46,5 +58,28 @@ func (h *IdentityHTTPHandler) Routes() []core_http_server.Route {
 			Path:    "/auth/login",
 			Handler: h.Login,
 		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/password-reset/request",
+			Handler: h.RequestPasswordReset,
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/password-reset/confirm",
+			Handler: h.ConfirmPasswordReset,
+		},
+		{
+			Method:     http.MethodPost,
+			Path:       "/auth/logout",
+			Handler:    h.Logout,
+			Middleware: h.protectedRouteMiddleware(),
+		},
 	}
+}
+
+func (h *IdentityHTTPHandler) protectedRouteMiddleware() []core_http_middleware.Middleware {
+	if h.protectedMiddleware == nil {
+		return nil
+	}
+	return []core_http_middleware.Middleware{h.protectedMiddleware}
 }

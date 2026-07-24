@@ -7,7 +7,10 @@ import (
 	"github.com/LisLisich/RESTAPI/internal/core/domain"
 )
 
-const emailVerificationTTL = 24 * time.Hour
+const (
+	emailVerificationTTL = 24 * time.Hour
+	passwordResetTTL     = time.Hour
+)
 
 type IdentityService struct {
 	registrationRepository RegistrationRepository
@@ -30,6 +33,14 @@ type RegistrationRepository interface {
 		tokenHash []byte,
 		now time.Time,
 	) (StoredAuthenticationSession, error)
+	RequestPasswordReset(ctx context.Context, request PasswordResetRequest) error
+	ResetPassword(
+		ctx context.Context,
+		tokenHash []byte,
+		passwordHash string,
+		resetAt time.Time,
+	) error
+	RevokeSession(ctx context.Context, tokenHash []byte, revokedAt time.Time) error
 }
 
 type PasswordHasher interface {
@@ -83,6 +94,14 @@ type StoredAuthenticationSession struct {
 
 type Principal struct {
 	UserID int
+}
+
+type PasswordResetRequest struct {
+	AccountUserID int
+	Email         string
+	Token         IssuedToken
+	ExpiresAt     time.Time
+	CreatedAt     time.Time
 }
 
 func NewIdentityService(

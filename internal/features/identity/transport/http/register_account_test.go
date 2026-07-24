@@ -28,6 +28,19 @@ type fakeIdentityService struct {
 	loginCalled bool
 	loginInput  identity_service.LoginInput
 	loginErr    error
+
+	passwordResetRequested bool
+	passwordResetEmail     string
+	passwordResetErr       error
+
+	resetPasswordCalled bool
+	resetToken          string
+	resetPassword       string
+	resetPasswordErr    error
+
+	logoutCalled bool
+	logoutToken  string
+	logoutErr    error
 }
 
 func (s *fakeIdentityService) RegisterAccount(
@@ -68,6 +81,35 @@ func (s *fakeIdentityService) Login(
 		CSRFToken: "csrf-token",
 		ExpiresAt: time.Now().Add(12 * time.Hour),
 	}, nil
+}
+
+func (s *fakeIdentityService) RequestPasswordReset(
+	_ context.Context,
+	email string,
+) error {
+	s.passwordResetRequested = true
+	s.passwordResetEmail = email
+	return s.passwordResetErr
+}
+
+func (s *fakeIdentityService) ResetPassword(
+	_ context.Context,
+	rawToken string,
+	newPassword string,
+) error {
+	s.resetPasswordCalled = true
+	s.resetToken = rawToken
+	s.resetPassword = newPassword
+	return s.resetPasswordErr
+}
+
+func (s *fakeIdentityService) Logout(
+	_ context.Context,
+	rawSessionToken string,
+) error {
+	s.logoutCalled = true
+	s.logoutToken = rawSessionToken
+	return s.logoutErr
 }
 
 func (s *fakeIdentityService) VerifyEmail(
@@ -158,8 +200,8 @@ func TestIdentityRoutesExposeV2RegistrationPath(t *testing.T) {
 	handler := NewIdentityHTTPHandler(&fakeIdentityService{})
 	routes := handler.Routes()
 
-	if len(routes) != 3 {
-		t.Fatalf("expected three routes, got %d", len(routes))
+	if len(routes) != 6 {
+		t.Fatalf("expected six routes, got %d", len(routes))
 	}
 	if routes[0].Method != http.MethodPost || routes[0].Path != "/auth/register" {
 		t.Fatalf("unexpected registration route: %s %s", routes[0].Method, routes[0].Path)

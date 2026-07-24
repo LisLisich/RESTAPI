@@ -80,7 +80,14 @@ func main() {
 		verificationTokenIssuer,
 		time.Now,
 	)
-	identityTransportHTTP := identity_transport_http.NewIdentityHTTPHandler(identityService)
+	sessionMiddleware := identity_http_middleware.Session(
+		identityService,
+		identity_transport_http.SessionCookieName,
+	)
+	identityTransportHTTP := identity_transport_http.NewIdentityHTTPHandler(
+		identityService,
+		sessionMiddleware,
+	)
 
 	logger.Debug("initializing feature", zap.String("feature", "users"))
 	usersRepository := users_postgres_repository.NewUserRepository(pool)
@@ -91,10 +98,6 @@ func main() {
 	tasksRepository := task_postgres_repository.NewTaskRepository(pool)
 	tasksService := task_service.NewTasksService(tasksRepository)
 	tasksTransportHTTP := tasks_transport_http.NewTasksHTTPHandler(tasksService)
-	sessionMiddleware := identity_http_middleware.Session(
-		identityService,
-		identity_transport_http.SessionCookieName,
-	)
 	tasksTransportHTTPV2 := tasks_transport_http_v2.NewTasksHTTPHandler(
 		tasksService,
 		sessionMiddleware,

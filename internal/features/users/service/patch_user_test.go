@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
 )
 
 func TestPatchUserAppliesPatchBeforeRepositoryUpdate(t *testing.T) {

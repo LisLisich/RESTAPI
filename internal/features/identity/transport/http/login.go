@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	core_http_request "github.com/LisLisich/RESTAPI/internal/core/transport/http/request"
-	core_http_response "github.com/LisLisich/RESTAPI/internal/core/transport/http/response"
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	core_http_request "github.com/LisLisich/fintask/internal/core/transport/http/request"
+	core_http_response "github.com/LisLisich/fintask/internal/core/transport/http/response"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
 )
 
 const (

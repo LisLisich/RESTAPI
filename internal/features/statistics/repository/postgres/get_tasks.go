@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 func (r *StatisticsRepository) GetTasks(

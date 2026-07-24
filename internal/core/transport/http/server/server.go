@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/LisLisich/RESTAPI/docs"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
+	"github.com/LisLisich/fintask/docs"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	core_http_middleware "github.com/LisLisich/fintask/internal/core/transport/http/middleware"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
 )

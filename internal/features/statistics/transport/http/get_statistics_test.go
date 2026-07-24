@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
 	"go.uber.org/zap"
 )
 

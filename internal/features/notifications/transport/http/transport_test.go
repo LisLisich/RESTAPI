@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
-	identity_http_middleware "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http/middleware"
-	notifications_service "github.com/LisLisich/RESTAPI/internal/features/notifications/service"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
+	identity_http_middleware "github.com/LisLisich/fintask/internal/features/identity/transport/http/middleware"
+	notifications_service "github.com/LisLisich/fintask/internal/features/notifications/service"
 	"go.uber.org/zap"
 )
 

@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
-	statistics_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/statistics/repository/postgres"
-	task_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/tasks/repository/postgres"
-	users_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/users/repository/postgres"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_pgx_pool "github.com/LisLisich/fintask/internal/core/repository/postgres/pool/pgx"
+	statistics_postgres_repository "github.com/LisLisich/fintask/internal/features/statistics/repository/postgres"
+	task_postgres_repository "github.com/LisLisich/fintask/internal/features/tasks/repository/postgres"
+	users_postgres_repository "github.com/LisLisich/fintask/internal/features/users/repository/postgres"
 )
 
-const integrationEnv = "RESTAPI_POSTGRES_INTEGRATION"
+const integrationEnv = "FINTASK_POSTGRES_INTEGRATION"
 
 func TestPostgresRepositoriesUserTaskLifecycle(t *testing.T) {
 	pool := openIntegrationPool(t)

@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
 	"go.uber.org/zap"
 )
 

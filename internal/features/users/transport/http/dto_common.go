@@ -1,6 +1,6 @@
 package users_transport_http
 
-import "github.com/LisLisich/RESTAPI/internal/core/domain"
+import "github.com/LisLisich/fintask/internal/core/domain"
 
 type UserDTOResponse struct {
 	ID          int     `json:"id" example:"10"`

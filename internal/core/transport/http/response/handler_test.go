@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
 	"go.uber.org/zap"
 )
 

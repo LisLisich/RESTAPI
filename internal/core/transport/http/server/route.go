@@ -3,7 +3,7 @@ package core_http_server
 import (
 	"net/http"
 
-	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
+	core_http_middleware "github.com/LisLisich/fintask/internal/core/transport/http/middleware"
 )
 
 type Route struct {

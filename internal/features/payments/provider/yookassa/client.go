@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	payments_provider "github.com/LisLisich/RESTAPI/internal/features/payments/provider"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	payments_provider "github.com/LisLisich/fintask/internal/features/payments/provider"
 )
 
 const maxResponseSize = 1 << 20

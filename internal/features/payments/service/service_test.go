@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	payments_provider "github.com/LisLisich/RESTAPI/internal/features/payments/provider"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	payments_provider "github.com/LisLisich/fintask/internal/features/payments/provider"
 )
 
 type fakeRepository struct {

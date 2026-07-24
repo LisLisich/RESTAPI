@@ -56,13 +56,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -112,13 +112,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -156,19 +156,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Author not found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -204,19 +204,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Task not found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -244,19 +244,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Task not found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -302,25 +302,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Task not found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -363,13 +363,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -407,13 +407,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -448,19 +448,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User not found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -487,19 +487,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User not found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -544,25 +544,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User not found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -611,7 +611,7 @@ const docTemplate = `{
                     "403": {
                         "description": "Некорректный callback",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -631,7 +631,7 @@ const docTemplate = `{
                     "404": {
                         "description": "Google OIDC выключен",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -671,19 +671,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Некорректный запрос",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Неверные учетные данные",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -712,19 +712,19 @@ const docTemplate = `{
                     "401": {
                         "description": "Требуется аутентификация",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Некорректный CSRF-токен",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -761,13 +761,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Токен неверен, просрочен или использован",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -807,13 +807,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Некорректный запрос",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -853,19 +853,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Некорректный запрос",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Email уже зарегистрирован",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -905,7 +905,7 @@ const docTemplate = `{
                     "401": {
                         "description": "Неверные учетные данные",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -945,7 +945,7 @@ const docTemplate = `{
                     "401": {
                         "description": "Refresh token недействителен",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -982,13 +982,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Токен неверен, просрочен или уже использован",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Внутренняя ошибка",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -1024,7 +1024,7 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -1080,19 +1080,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -1135,13 +1135,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -1448,13 +1448,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Требуется аутентификация",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Кошелек не найден",
                         "schema": {
-                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse"
                         }
                     }
                 }
@@ -1462,7 +1462,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse": {
+        "github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse": {
             "type": "object",
             "properties": {
                 "error": {

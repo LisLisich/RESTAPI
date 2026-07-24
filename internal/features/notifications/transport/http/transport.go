@@ -3,9 +3,9 @@ package notifications_transport_http
 import (
 	"net/http"
 
-	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
-	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
-	notifications_service "github.com/LisLisich/RESTAPI/internal/features/notifications/service"
+	core_http_middleware "github.com/LisLisich/fintask/internal/core/transport/http/middleware"
+	core_http_server "github.com/LisLisich/fintask/internal/core/transport/http/server"
+	notifications_service "github.com/LisLisich/fintask/internal/features/notifications/service"
 )
 
 type NotificationHTTPHandler struct {

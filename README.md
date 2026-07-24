@@ -1,6 +1,6 @@
 # FinTask
 
-[![CI](https://github.com/LisLisich/RESTAPI/actions/workflows/ci.yml/badge.svg?branch=fintask-showcase)](https://github.com/LisLisich/RESTAPI/actions/workflows/ci.yml)
+[![CI](https://github.com/LisLisich/fintask/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/LisLisich/fintask/actions/workflows/ci.yml)
 
 FinTask — учебный финансовый backend на Go: задачи, регистрация, Google OIDC,
 RUB-кошелек, sandbox-платежи YooKassa и уведомления. Проект построен как

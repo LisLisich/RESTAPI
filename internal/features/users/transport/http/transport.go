@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
-	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	"github.com/LisLisich/fintask/internal/core/domain"
+	core_http_server "github.com/LisLisich/fintask/internal/core/transport/http/server"
 )
 
 type UsersHTTPHandler struct {

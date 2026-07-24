@@ -3,7 +3,7 @@ package core_http_types
 import (
 	"encoding/json"
 
-	"github.com/LisLisich/RESTAPI/internal/core/domain"
+	"github.com/LisLisich/fintask/internal/core/domain"
 )
 
 type Nullable[T any] struct {

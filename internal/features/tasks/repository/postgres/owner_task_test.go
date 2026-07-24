@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_postgres_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_postgres_pool "github.com/LisLisich/fintask/internal/core/repository/postgres/pool"
 )
 
 func TestGetTaskForUserFiltersByTaskAndOwner(t *testing.T) {

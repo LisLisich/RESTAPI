@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse:
+  github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse:
     properties:
       error:
         example: Bad Request
@@ -509,11 +509,11 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Получение статистики
       tags:
       - statistics
@@ -547,11 +547,11 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Список задач
       tags:
       - tasks
@@ -576,15 +576,15 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: Author not found
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Создать задачу
       tags:
       - tasks
@@ -604,15 +604,15 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: Task not found
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Удаление задачи
       tags:
       - tasks
@@ -635,15 +635,15 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: Task not found
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Получение задачи
       tags:
       - tasks
@@ -680,19 +680,19 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: Task not found
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Обновить задачу
       tags:
       - tasks
@@ -720,11 +720,11 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Список пользователей
       tags:
       - users
@@ -749,11 +749,11 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Создать пользователя
       tags:
       - users
@@ -772,15 +772,15 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: User not found
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Удаление пользователя
       tags:
       - users
@@ -802,15 +802,15 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: User not found
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Получение пользователя
       tags:
       - users
@@ -846,19 +846,19 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: User not found
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Изменение пользовтеля
       tags:
       - users
@@ -891,7 +891,7 @@ paths:
         "403":
           description: Некорректный callback
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Завершить вход через Google
       tags:
       - auth
@@ -904,7 +904,7 @@ paths:
         "404":
           description: Google OIDC выключен
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Начать вход через Google
       tags:
       - auth
@@ -930,15 +930,15 @@ paths:
         "400":
           description: Некорректный запрос
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "401":
           description: Неверные учетные данные
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Войти по email и паролю
       tags:
       - identity
@@ -953,15 +953,15 @@ paths:
         "401":
           description: Требуется аутентификация
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "403":
           description: Некорректный CSRF-токен
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       security:
       - CSRFToken: []
         SessionCookie: []
@@ -988,11 +988,11 @@ paths:
         "400":
           description: Токен неверен, просрочен или использован
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Установить новый пароль
       tags:
       - identity
@@ -1018,11 +1018,11 @@ paths:
         "400":
           description: Некорректный запрос
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Запросить сброс пароля
       tags:
       - identity
@@ -1049,15 +1049,15 @@ paths:
         "400":
           description: Некорректный запрос
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "409":
           description: Email уже зарегистрирован
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Зарегистрировать аккаунт
       tags:
       - identity
@@ -1083,7 +1083,7 @@ paths:
         "401":
           description: Неверные учетные данные
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Получить JWT для CLI
       tags:
       - identity
@@ -1109,7 +1109,7 @@ paths:
         "401":
           description: Refresh token недействителен
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Обновить JWT
       tags:
       - identity
@@ -1133,11 +1133,11 @@ paths:
         "400":
           description: Токен неверен, просрочен или уже использован
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "500":
           description: Внутренняя ошибка
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Подтвердить email
       tags:
       - identity
@@ -1155,7 +1155,7 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       security:
       - BearerAuth: []
       - SessionCookie: []
@@ -1189,15 +1189,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       security:
       - BearerAuth: []
       - CSRFToken: []
@@ -1229,11 +1229,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       summary: Принять уведомление YooKassa
       tags:
       - payments
@@ -1420,11 +1420,11 @@ paths:
         "401":
           description: Требуется аутентификация
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
         "404":
           description: Кошелек не найден
           schema:
-            $ref: '#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse'
+            $ref: '#/definitions/github_com_LisLisich_fintask_internal_core_transport_http_response.ErrorResponse'
       security:
       - BearerAuth: []
       - SessionCookie: []

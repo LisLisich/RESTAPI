@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
-	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
-	core_http_response "github.com/LisLisich/RESTAPI/internal/core/transport/http/response"
-	identity_http_middleware "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http/middleware"
+	core_errors "github.com/LisLisich/fintask/internal/core/errors"
+	core_logger "github.com/LisLisich/fintask/internal/core/logger"
+	core_http_response "github.com/LisLisich/fintask/internal/core/transport/http/response"
+	identity_http_middleware "github.com/LisLisich/fintask/internal/features/identity/transport/http/middleware"
 )
 
 type NotificationResponse struct {

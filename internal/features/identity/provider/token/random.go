@@ -6,7 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
+	identity_service "github.com/LisLisich/fintask/internal/features/identity/service"
 )
 
 const minimumTokenLength = 16

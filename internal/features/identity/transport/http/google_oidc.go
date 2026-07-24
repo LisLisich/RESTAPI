@@ -12,6 +12,13 @@ import (
 
 const googleStateCookieName = "__Host-fintask_google_state"
 
+// StartGoogleLogin godoc
+// @Summary Начать вход через Google
+// @Description Создает state, nonce и PKCE challenge, затем перенаправляет в Google
+// @Tags auth
+// @Success 302 "Перенаправление в Google"
+// @Failure 404 {object} core_http_response.ErrorResponse "Google OIDC выключен"
+// @Router /api/v2/auth/google/start [get]
 func (h *IdentityHTTPHandler) StartGoogleLogin(
 	rw http.ResponseWriter,
 	request *http.Request,
@@ -41,6 +48,17 @@ func (h *IdentityHTTPHandler) StartGoogleLogin(
 	http.Redirect(rw, request, start.AuthorizationURL, http.StatusFound)
 }
 
+// CompleteGoogleLogin godoc
+// @Summary Завершить вход через Google
+// @Description Проверяет callback OIDC и создает защищенную cookie-сессию
+// @Tags auth
+// @Produce json
+// @Param code query string true "Authorization code"
+// @Param state query string true "Одноразовый state"
+// @Param iss query string true "OIDC issuer"
+// @Success 200 {object} LoginResponse "Аккаунт"
+// @Failure 403 {object} core_http_response.ErrorResponse "Некорректный callback"
+// @Router /api/v2/auth/google/callback [get]
 func (h *IdentityHTTPHandler) CompleteGoogleLogin(
 	rw http.ResponseWriter,
 	request *http.Request,

@@ -22,7 +22,7 @@ type GetTasksResponse []TaskDTOResponse
 // @Success      200      {object}  GetTasksResponse                 "Список задач"
 // @Failure      400      {object}  core_http_response.ErrorResponse "Bad request"
 // @Failure      500      {object}  core_http_response.ErrorResponse "Internal server error"
-// @Router       /tasks [get]
+// @Router       /api/v1/tasks [get]
 func (h *TasksHTTPHandler) GetTasks(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

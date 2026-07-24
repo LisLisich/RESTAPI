@@ -23,7 +23,7 @@ type GetStatisticsResponse StatisticsDTOResponse
 // @Success      200      {object}  GetStatisticsResponse "Успешное получение статистики"
 // @Failure      400      {object}  core_http_response.ErrorResponse "Bad request"
 // @Failure      500      {object}  core_http_response.ErrorResponse "Internal server error"
-// @Router       /statistics [get]
+// @Router       /api/v1/statistics [get]
 func (h *StatisticsHTTPHandler) GetStatistics(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

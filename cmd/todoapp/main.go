@@ -53,11 +53,23 @@ import (
 	_ "github.com/LisLisich/RESTAPI/docs"
 )
 
-// @title 		Golang Todo API
-// @version 	1.0
-// @description Todo Application REST-API scheme
-// @host 		127.0.0.1:5050
-// @BasePath 	/api/v1
+// @title FinTask API
+// @version 1.0.0
+// @description Owner-scoped tasks, identity, wallet, sandbox payments and notifications.
+// @BasePath /
+// @schemes https http
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Access JWT в формате: Bearer <token>
+// @securityDefinitions.apikey SessionCookie
+// @in header
+// @name Cookie
+// @description Защищенная cookie-сессия браузера
+// @securityDefinitions.apikey CSRFToken
+// @in header
+// @name X-CSRF-Token
+// @description CSRF-токен для изменяющих запросов с cookie-сессией
 func main() {
 	cfg := core_config.NewConfigMust()
 	time.Local = cfg.TimeZone

@@ -12,7 +12,7 @@ import (
 
 type GetWalletResponse struct {
 	Version      int    `json:"version"`
-	BalanceMinor int64  `json:"balance_minor"`
+	BalanceMinor int64  `json:"balance_minor" format:"int64"`
 	Currency     string `json:"currency"`
 }
 
@@ -24,7 +24,9 @@ type GetWalletResponse struct {
 // @Success 200 {object} GetWalletResponse "RUB-кошелек"
 // @Failure 401 {object} core_http_response.ErrorResponse "Требуется аутентификация"
 // @Failure 404 {object} core_http_response.ErrorResponse "Кошелек не найден"
-// @Router /wallet [get]
+// @Security BearerAuth
+// @Security SessionCookie
+// @Router /api/v2/wallet [get]
 func (handler *WalletHTTPHandler) GetWallet(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(
 		core_logger.FromContext(r.Context()),

@@ -12,18 +12,33 @@ import (
 )
 
 type CreatePaymentRequest struct {
-	AmountMinor int64 `json:"amount_minor" validate:"required,gt=0"`
+	AmountMinor int64 `json:"amount_minor" validate:"required,gt=0" format:"int64" minimum:"1" example:"15000"`
 }
 
 type PaymentResponse struct {
 	ID                string `json:"id"`
 	ProviderPaymentID string `json:"provider_payment_id"`
 	Status            string `json:"status"`
-	AmountMinor       int64  `json:"amount_minor"`
+	AmountMinor       int64  `json:"amount_minor" format:"int64" minimum:"1" example:"15000"`
 	Currency          string `json:"currency"`
 	ConfirmationURL   string `json:"confirmation_url"`
 }
 
+// CreatePayment godoc
+// @Summary Создать sandbox-платеж YooKassa
+// @Description Резервирует платеж по Idempotency-Key и возвращает URL подтверждения
+// @Tags payments
+// @Accept json
+// @Produce json
+// @Param Idempotency-Key header string true "Клиентский ключ идемпотентности"
+// @Param request body CreatePaymentRequest true "Сумма в копейках"
+// @Success 201 {object} PaymentResponse
+// @Failure 400 {object} core_http_response.ErrorResponse
+// @Failure 401 {object} core_http_response.ErrorResponse
+// @Failure 409 {object} core_http_response.ErrorResponse
+// @Security BearerAuth
+// @Security SessionCookie && CSRFToken
+// @Router /api/v2/payments [post]
 func (handler *PaymentHTTPHandler) CreatePayment(
 	rw http.ResponseWriter,
 	request *http.Request,

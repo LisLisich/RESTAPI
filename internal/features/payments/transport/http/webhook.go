@@ -18,6 +18,17 @@ type YooKassaWebhookRequest struct {
 	} `json:"object" validate:"required"`
 }
 
+// YooKassaWebhook godoc
+// @Summary Принять уведомление YooKassa
+// @Description Повторно проверяет платеж через API и выполняет одно зачисление
+// @Tags payments
+// @Accept json
+// @Produce json
+// @Param request body YooKassaWebhookRequest true "Уведомление payment.succeeded"
+// @Success 200 {object} map[string]bool
+// @Failure 400 {object} core_http_response.ErrorResponse
+// @Failure 409 {object} core_http_response.ErrorResponse
+// @Router /api/v2/payments/webhook/yookassa [post]
 func (handler *PaymentHTTPHandler) YooKassaWebhook(
 	rw http.ResponseWriter,
 	request *http.Request,

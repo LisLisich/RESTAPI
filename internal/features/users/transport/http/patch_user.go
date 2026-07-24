@@ -35,7 +35,7 @@ type PatchUserRequest struct {
 // @Failure 404 {object} core_http_response.ErrorResponse "User not found"
 // @Failure 409 {object} core_http_response.ErrorResponse "Conflict"
 // @Failure 500 {object} core_http_response.ErrorResponse "Internal server error"
-// @Router /users/{id} [patch]
+// @Router /api/v1/users/{id} [patch]
 func (r *PatchUserRequest) Validate() error {
 	if r.FullName.Set {
 		if r.FullName.Value == nil {

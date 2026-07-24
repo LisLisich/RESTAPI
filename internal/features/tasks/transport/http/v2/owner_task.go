@@ -19,9 +19,11 @@ import (
 // @Produce json
 // @Param id path int true "ID задачи"
 // @Success 200 {object} TaskResponse "Задача"
-// @Failure 401 {object} core_http_response.ErrorResponse "Требуется аутентификация"
-// @Failure 404 {object} core_http_response.ErrorResponse "Задача не найдена"
-// @Router /tasks/{id} [get]
+// @Failure 401 {object} ErrorResponse "Требуется аутентификация"
+// @Failure 404 {object} ErrorResponse "Задача не найдена"
+// @Security BearerAuth
+// @Security SessionCookie
+// @Router /api/v2/tasks/{id} [get]
 func (h *TasksHTTPHandler) GetTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := newResponseHandler(rw, r)
 	principal, taskID, ok := principalAndTaskID(responseHandler, r)
@@ -85,11 +87,13 @@ func (request PatchTaskRequest) Domain() domain.TaskPatch {
 // @Param id path int true "ID задачи"
 // @Param request body PatchTaskRequest true "Изменяемые поля"
 // @Success 200 {object} TaskResponse "Обновленная задача"
-// @Failure 400 {object} core_http_response.ErrorResponse "Некорректный patch"
-// @Failure 401 {object} core_http_response.ErrorResponse "Требуется аутентификация"
-// @Failure 404 {object} core_http_response.ErrorResponse "Задача не найдена"
-// @Failure 409 {object} core_http_response.ErrorResponse "Конкурентное изменение"
-// @Router /tasks/{id} [patch]
+// @Failure 400 {object} ErrorResponse "Некорректный patch"
+// @Failure 401 {object} ErrorResponse "Требуется аутентификация"
+// @Failure 404 {object} ErrorResponse "Задача не найдена"
+// @Failure 409 {object} ErrorResponse "Конкурентное изменение"
+// @Security BearerAuth
+// @Security SessionCookie && CSRFToken
+// @Router /api/v2/tasks/{id} [patch]
 func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := newResponseHandler(rw, r)
 	principal, taskID, ok := principalAndTaskID(responseHandler, r)
@@ -121,9 +125,11 @@ func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 // @Tags tasks-v2
 // @Param id path int true "ID задачи"
 // @Success 204 "Задача удалена"
-// @Failure 401 {object} core_http_response.ErrorResponse "Требуется аутентификация"
-// @Failure 404 {object} core_http_response.ErrorResponse "Задача не найдена"
-// @Router /tasks/{id} [delete]
+// @Failure 401 {object} ErrorResponse "Требуется аутентификация"
+// @Failure 404 {object} ErrorResponse "Задача не найдена"
+// @Security BearerAuth
+// @Security SessionCookie && CSRFToken
+// @Router /api/v2/tasks/{id} [delete]
 func (h *TasksHTTPHandler) DeleteTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := newResponseHandler(rw, r)
 	principal, taskID, ok := principalAndTaskID(responseHandler, r)

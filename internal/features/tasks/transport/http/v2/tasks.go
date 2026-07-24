@@ -28,6 +28,19 @@ type TaskResponse struct {
 	CompletedAt *time.Time `json:"completed_at"`
 }
 
+// CreateTask godoc
+// @Summary Создать свою задачу
+// @Description Создает задачу для текущего аутентифицированного пользователя
+// @Tags tasks-v2
+// @Accept json
+// @Produce json
+// @Param request body CreateTaskRequest true "Новая задача"
+// @Success 201 {object} TaskResponse "Созданная задача"
+// @Failure 400 {object} ErrorResponse "Некорректный запрос"
+// @Failure 401 {object} ErrorResponse "Требуется аутентификация"
+// @Security BearerAuth
+// @Security SessionCookie && CSRFToken
+// @Router /api/v2/tasks [post]
 func (h *TasksHTTPHandler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := newResponseHandler(rw, r)
 	principal, ok := identity_http_middleware.PrincipalFromContext(r.Context())
@@ -56,6 +69,19 @@ func (h *TasksHTTPHandler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler.JSONResponse(taskResponse(task), http.StatusCreated)
 }
 
+// GetTasks godoc
+// @Summary Получить свои задачи
+// @Description Возвращает только задачи текущего аутентифицированного пользователя
+// @Tags tasks-v2
+// @Produce json
+// @Param limit query int false "Максимальное число задач"
+// @Param offset query int false "Смещение"
+// @Success 200 {array} TaskResponse "Задачи"
+// @Failure 400 {object} ErrorResponse "Некорректные параметры"
+// @Failure 401 {object} ErrorResponse "Требуется аутентификация"
+// @Security BearerAuth
+// @Security SessionCookie
+// @Router /api/v2/tasks [get]
 func (h *TasksHTTPHandler) GetTasks(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := newResponseHandler(rw, r)
 	principal, ok := identity_http_middleware.PrincipalFromContext(r.Context())

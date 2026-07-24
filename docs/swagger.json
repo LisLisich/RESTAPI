@@ -1,15 +1,18 @@
 {
+    "schemes": [
+        "https",
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
-        "description": "Todo Application REST-API scheme",
-        "title": "Golang Todo API",
+        "description": "Owner-scoped tasks, identity, wallet, sandbox payments and notifications.",
+        "title": "FinTask API",
         "contact": {},
-        "version": "1.0"
+        "version": "1.0.0"
     },
-    "host": "127.0.0.1:5050",
-    "basePath": "/api/v1",
+    "basePath": "/",
     "paths": {
-        "/statistics": {
+        "/api/v1/statistics": {
             "get": {
                 "description": "Получение статистики по задачам с опциональной фильтрацией по user_id и/или временному промежутку",
                 "produces": [
@@ -62,7 +65,7 @@
                 }
             }
         },
-        "/tasks": {
+        "/api/v1/tasks": {
             "get": {
                 "description": "Просмотр списка задач с опциональной пагинацией и/или фильтрацией по ID автора задачи",
                 "produces": [
@@ -168,7 +171,7 @@
                 }
             }
         },
-        "/tasks/{id}": {
+        "/api/v1/tasks/{id}": {
             "get": {
                 "description": "Получение конкретной задачи по её ID",
                 "produces": [
@@ -320,7 +323,7 @@
                 }
             }
         },
-        "/users": {
+        "/api/v1/users": {
             "get": {
                 "description": "Просмотр списка пользователей с опциаональной пагинацией",
                 "produces": [
@@ -413,7 +416,7 @@
                 }
             }
         },
-        "/users/{id}": {
+        "/api/v1/users/{id}": {
             "get": {
                 "description": "Получение конкретного пользователя по его ID",
                 "produces": [
@@ -561,6 +564,898 @@
                     }
                 }
             }
+        },
+        "/api/v2/auth/google/callback": {
+            "get": {
+                "description": "Проверяет callback OIDC и создает защищенную cookie-сессию",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Завершить вход через Google",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Одноразовый state",
+                        "name": "state",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OIDC issuer",
+                        "name": "iss",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Аккаунт",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.LoginResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Некорректный callback",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/google/start": {
+            "get": {
+                "description": "Создает state, nonce и PKCE challenge, затем перенаправляет в Google",
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Начать вход через Google",
+                "responses": {
+                    "302": {
+                        "description": "Перенаправление в Google"
+                    },
+                    "404": {
+                        "description": "Google OIDC выключен",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/login": {
+            "post": {
+                "description": "Создает серверную cookie-сессию и отдельный CSRF-токен",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Войти по email и паролю",
+                "parameters": [
+                    {
+                        "description": "Учетные данные",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Вход выполнен",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Неверные учетные данные",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/logout": {
+            "post": {
+                "security": [
+                    {
+                        "CSRFToken": [],
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Отзывает серверную сессию и очищает session/CSRF cookies",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Завершить текущую сессию",
+                "responses": {
+                    "204": {
+                        "description": "Сессия завершена"
+                    },
+                    "401": {
+                        "description": "Требуется аутентификация",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Некорректный CSRF-токен",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/password-reset/confirm": {
+            "post": {
+                "description": "Потребляет одноразовый токен, меняет пароль и отзывает старые сессии",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Установить новый пароль",
+                "parameters": [
+                    {
+                        "description": "Токен и новый пароль",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.ConfirmPasswordResetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Пароль изменен"
+                    },
+                    "400": {
+                        "description": "Токен неверен, просрочен или использован",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/password-reset/request": {
+            "post": {
+                "description": "Создает одноразовый токен, если активный аккаунт существует",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Запросить сброс пароля",
+                "parameters": [
+                    {
+                        "description": "Email аккаунта",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.RequestPasswordResetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Запрос принят",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.RequestPasswordResetResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/register": {
+            "post": {
+                "description": "Создает аккаунт и отправляет запрос на подтверждение email через outbox",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Зарегистрировать аккаунт",
+                "parameters": [
+                    {
+                        "description": "Данные регистрации",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.RegisterAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Аккаунт ожидает подтверждения email",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.RegisterAccountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Email уже зарегистрирован",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/token": {
+            "post": {
+                "description": "Возвращает Ed25519 access JWT и непрозрачный refresh token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Получить JWT для CLI",
+                "parameters": [
+                    {
+                        "description": "Учетные данные",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Пара токенов",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.APITokenResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Неверные учетные данные",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/token/refresh": {
+            "post": {
+                "description": "Одноразово ротирует refresh token и выдает новую пару",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Обновить JWT",
+                "parameters": [
+                    {
+                        "description": "Refresh token",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.RefreshAPIRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Новая пара токенов",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.APITokenResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Refresh token недействителен",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/verify-email": {
+            "post": {
+                "description": "Активирует аккаунт по одноразовому токену подтверждения",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "identity"
+                ],
+                "summary": "Подтвердить email",
+                "parameters": [
+                    {
+                        "description": "Токен подтверждения",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_identity_transport_http.VerifyEmailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Email подтвержден"
+                    },
+                    "400": {
+                        "description": "Токен неверен, просрочен или уже использован",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/notifications": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "SessionCookie": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Получить свои уведомления",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_features_notifications_transport_http.NotificationResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/payments": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "CSRFToken": [],
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Резервирует платеж по Idempotency-Key и возвращает URL подтверждения",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Создать sandbox-платеж YooKassa",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Клиентский ключ идемпотентности",
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Сумма в копейках",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_payments_transport_http.CreatePaymentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_payments_transport_http.PaymentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/payments/webhook/yookassa": {
+            "post": {
+                "description": "Повторно проверяет платеж через API и выполняет одно зачисление",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Принять уведомление YooKassa",
+                "parameters": [
+                    {
+                        "description": "Уведомление payment.succeeded",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_payments_transport_http.YooKassaWebhookRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/tasks": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Возвращает только задачи текущего аутентифицированного пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks-v2"
+                ],
+                "summary": "Получить свои задачи",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Максимальное число задач",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Смещение",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Задачи",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_features_tasks_transport_http_v2.TaskResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректные параметры",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Требуется аутентификация",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "CSRFToken": [],
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Создает задачу для текущего аутентифицированного пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks-v2"
+                ],
+                "summary": "Создать свою задачу",
+                "parameters": [
+                    {
+                        "description": "Новая задача",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.CreateTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Созданная задача",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.TaskResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Требуется аутентификация",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/tasks/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Возвращает задачу только текущего пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks-v2"
+                ],
+                "summary": "Получить свою задачу",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID задачи",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Задача",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.TaskResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Требуется аутентификация",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Задача не найдена",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "CSRFToken": [],
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Удаляет задачу только текущего пользователя",
+                "tags": [
+                    "tasks-v2"
+                ],
+                "summary": "Удалить свою задачу",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID задачи",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Задача удалена"
+                    },
+                    "401": {
+                        "description": "Требуется аутентификация",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Задача не найдена",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "CSRFToken": [],
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Применяет nullable patch только к задаче текущего пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks-v2"
+                ],
+                "summary": "Изменить свою задачу",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID задачи",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Изменяемые поля",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.PatchTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Обновленная задача",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.TaskResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный patch",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Требуется аутентификация",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Задача не найдена",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Конкурентное изменение",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_tasks_transport_http_v2.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/wallet": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "SessionCookie": []
+                    }
+                ],
+                "description": "Возвращает баланс целым числом копеек",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "Получить свой кошелек",
+                "responses": {
+                    "200": {
+                        "description": "RUB-кошелек",
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_wallet_transport_http.GetWalletResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Требуется аутентификация",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Кошелек не найден",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_LisLisich_RESTAPI_internal_core_transport_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -569,11 +1464,253 @@
             "properties": {
                 "error": {
                     "type": "string",
-                    "example": "full error text"
+                    "example": "Bad Request"
                 },
                 "message": {
                     "type": "string",
                     "example": "short human-readable message"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.APITokenResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.ConfirmPasswordResetRequest": {
+            "type": "object",
+            "required": [
+                "new_password",
+                "token"
+            ],
+            "properties": {
+                "new_password": {
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 12
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 254,
+                    "example": "user@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 12,
+                    "example": "strong-password"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 42
+                }
+            }
+        },
+        "internal_features_identity_transport_http.RefreshAPIRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.RegisterAccountRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "full_name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 254,
+                    "example": "user@example.com"
+                },
+                "full_name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "example": "Ivan Ivanov"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 12,
+                    "example": "strong-password"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.RegisterAccountResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "pending_verification"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 42
+                }
+            }
+        },
+        "internal_features_identity_transport_http.RequestPasswordResetRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 254,
+                    "example": "user@example.com"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.RequestPasswordResetResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_features_identity_transport_http.VerifyEmailRequest": {
+            "type": "object",
+            "required": [
+                "token"
+            ],
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "opaque-verification-token"
+                }
+            }
+        },
+        "internal_features_notifications_transport_http.NotificationResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "read_at": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_features_payments_transport_http.CreatePaymentRequest": {
+            "type": "object",
+            "required": [
+                "amount_minor"
+            ],
+            "properties": {
+                "amount_minor": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "example": 15000
+                }
+            }
+        },
+        "internal_features_payments_transport_http.PaymentResponse": {
+            "type": "object",
+            "properties": {
+                "amount_minor": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "example": 15000
+                },
+                "confirmation_url": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "provider_payment_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_features_payments_transport_http.YooKassaWebhookRequest": {
+            "type": "object",
+            "required": [
+                "event",
+                "object",
+                "type"
+            ],
+            "properties": {
+                "event": {
+                    "type": "string"
+                },
+                "object": {
+                    "type": "object",
+                    "required": [
+                        "id"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },
@@ -599,7 +1736,29 @@
             }
         },
         "internal_features_tasks_transport_http.CreateTaskRequest": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "author_user_id",
+                "title"
+            ],
+            "properties": {
+                "author_user_id": {
+                    "type": "integer",
+                    "example": 42
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "example": "Сделать до четверга домашнее задание по математике"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "example": "Домашнее задание"
+                }
+            }
         },
         "internal_features_tasks_transport_http.CreateTaskResponse": {
             "type": "object",
@@ -765,6 +1924,78 @@
                 }
             }
         },
+        "internal_features_tasks_transport_http_v2.CreateTaskRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "minLength": 1
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "example": "Prepare interview"
+                }
+            }
+        },
+        "internal_features_tasks_transport_http_v2.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Bad Request"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "short human-readable message"
+                }
+            }
+        },
+        "internal_features_tasks_transport_http_v2.PatchTaskRequest": {
+            "type": "object",
+            "properties": {
+                "completed": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_features_tasks_transport_http_v2.TaskResponse": {
+            "type": "object",
+            "properties": {
+                "completed": {
+                    "type": "boolean"
+                },
+                "completed_at": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "integer"
+                }
+            }
+        },
         "internal_features_users_transport_http.CreateUserRequest": {
             "type": "object",
             "required": [
@@ -881,6 +2112,41 @@
                     "example": 3
                 }
             }
+        },
+        "internal_features_wallet_transport_http.GetWalletResponse": {
+            "type": "object",
+            "properties": {
+                "balance_minor": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Access JWT в формате: Bearer \u003ctoken\u003e",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "CSRFToken": {
+            "description": "CSRF-токен для изменяющих запросов с cookie-сессией",
+            "type": "apiKey",
+            "name": "X-CSRF-Token",
+            "in": "header"
+        },
+        "SessionCookie": {
+            "description": "Защищенная cookie-сессия браузера",
+            "type": "apiKey",
+            "name": "Cookie",
+            "in": "header"
         }
     }
 }

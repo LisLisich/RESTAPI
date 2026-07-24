@@ -25,7 +25,7 @@ type APITokenResponse struct {
 // @Param request body LoginRequest true "Учетные данные"
 // @Success 200 {object} APITokenResponse "Пара токенов"
 // @Failure 401 {object} core_http_response.ErrorResponse "Неверные учетные данные"
-// @Router /auth/token [post]
+// @Router /api/v2/auth/token [post]
 func (h *IdentityHTTPHandler) LoginAPI(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(
 		core_logger.FromContext(r.Context()),
@@ -60,7 +60,7 @@ type RefreshAPIRequest struct {
 // @Param request body RefreshAPIRequest true "Refresh token"
 // @Success 200 {object} APITokenResponse "Новая пара токенов"
 // @Failure 401 {object} core_http_response.ErrorResponse "Refresh token недействителен"
-// @Router /auth/token/refresh [post]
+// @Router /api/v2/auth/token/refresh [post]
 func (h *IdentityHTTPHandler) RefreshAPI(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(
 		core_logger.FromContext(r.Context()),

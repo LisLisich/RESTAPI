@@ -26,7 +26,7 @@ type RequestPasswordResetResponse struct {
 // @Success 202 {object} RequestPasswordResetResponse "Запрос принят"
 // @Failure 400 {object} core_http_response.ErrorResponse "Некорректный запрос"
 // @Failure 500 {object} core_http_response.ErrorResponse "Внутренняя ошибка"
-// @Router /auth/password-reset/request [post]
+// @Router /api/v2/auth/password-reset/request [post]
 func (h *IdentityHTTPHandler) RequestPasswordReset(
 	rw http.ResponseWriter,
 	r *http.Request,
@@ -67,7 +67,7 @@ type ConfirmPasswordResetRequest struct {
 // @Success 204 "Пароль изменен"
 // @Failure 400 {object} core_http_response.ErrorResponse "Токен неверен, просрочен или использован"
 // @Failure 500 {object} core_http_response.ErrorResponse "Внутренняя ошибка"
-// @Router /auth/password-reset/confirm [post]
+// @Router /api/v2/auth/password-reset/confirm [post]
 func (h *IdentityHTTPHandler) ConfirmPasswordReset(
 	rw http.ResponseWriter,
 	r *http.Request,

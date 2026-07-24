@@ -18,7 +18,8 @@ import (
 // @Failure 401 {object} core_http_response.ErrorResponse "Требуется аутентификация"
 // @Failure 403 {object} core_http_response.ErrorResponse "Некорректный CSRF-токен"
 // @Failure 500 {object} core_http_response.ErrorResponse "Внутренняя ошибка"
-// @Router /auth/logout [post]
+// @Security SessionCookie && CSRFToken
+// @Router /api/v2/auth/logout [post]
 func (h *IdentityHTTPHandler) Logout(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(
 		core_logger.FromContext(r.Context()),

@@ -22,7 +22,7 @@ type VerifyEmailRequest struct {
 // @Success 204 "Email подтвержден"
 // @Failure 400 {object} core_http_response.ErrorResponse "Токен неверен, просрочен или уже использован"
 // @Failure 500 {object} core_http_response.ErrorResponse "Внутренняя ошибка"
-// @Router /auth/verify-email [post]
+// @Router /api/v2/auth/verify-email [post]
 func (h *IdentityHTTPHandler) VerifyEmail(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

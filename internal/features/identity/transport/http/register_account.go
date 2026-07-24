@@ -32,7 +32,7 @@ type RegisterAccountResponse struct {
 // @Failure 400 {object} core_http_response.ErrorResponse "Некорректный запрос"
 // @Failure 409 {object} core_http_response.ErrorResponse "Email уже зарегистрирован"
 // @Failure 500 {object} core_http_response.ErrorResponse "Внутренняя ошибка"
-// @Router /auth/register [post]
+// @Router /api/v2/auth/register [post]
 func (h *IdentityHTTPHandler) RegisterAccount(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

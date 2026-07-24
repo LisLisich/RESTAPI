@@ -19,6 +19,15 @@ type NotificationResponse struct {
 	CreatedAt time.Time  `json:"created_at"`
 }
 
+// ListNotifications godoc
+// @Summary Получить свои уведомления
+// @Tags notifications
+// @Produce json
+// @Success 200 {array} NotificationResponse
+// @Failure 401 {object} core_http_response.ErrorResponse
+// @Security BearerAuth
+// @Security SessionCookie
+// @Router /api/v2/notifications [get]
 func (handler *NotificationHTTPHandler) ListNotifications(
 	rw http.ResponseWriter,
 	request *http.Request,

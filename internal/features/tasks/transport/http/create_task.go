@@ -12,7 +12,7 @@ import (
 type CreateTaskRequest struct {
 	Title        string  `json:"title" validate:"required,min=1,max=100" example:"Домашнее задание"`
 	Description  *string `json:"description" validate:"omitempty,min=1,max=1000" example:"Сделать до четверга домашнее задание по математике"`
-	AuthorUserID int     `json:"author_user_id" validate:"required" example:"550e8400-e29b-41d4-a716-446655440000"`
+	AuthorUserID int     `json:"author_user_id" validate:"required" example:"42"`
 }
 
 type CreateTaskResponse TaskDTOResponse
@@ -28,7 +28,7 @@ type CreateTaskResponse TaskDTOResponse
 // @Failure      400      {object}  core_http_response.ErrorResponse "Bad request"
 // @Failure      404      {object} 	core_http_response.ErrorResponse "Author not found"
 // @Failure      500      {object}  core_http_response.ErrorResponse "Internal server error"
-// @Router       /tasks [post]
+// @Router       /api/v1/tasks [post]
 func (h *TasksHTTPHandler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

@@ -26,7 +26,7 @@ type CreateUserResponse UserDTOResponse
 // @Success 201 {object} CreateUserResponse "Успешно созданный пользователь"
 // @Failure 400 {object} core_http_response.ErrorResponse "Bad request"
 // @Failure 500 {object} core_http_response.ErrorResponse "Internal server error"
-// @Router /users [post]
+// @Router /api/v1/users [post]
 func (h *UsersHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

@@ -63,7 +63,7 @@ type PatchUserResponse TaskDTOResponse
 // @Failure      404      {object}  core_http_response.ErrorResponse "Task not found"
 // @Failure      409      {object}  core_http_response.ErrorResponse "Conflict"
 // @Failure      500      {object}  core_http_response.ErrorResponse "Internal server error"
-// @Router       /tasks/{id} [patch]
+// @Router       /api/v1/tasks/{id} [patch]
 func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

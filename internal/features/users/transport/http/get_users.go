@@ -21,7 +21,7 @@ type GetUsersResponse []UserDTOResponse
 // @Success 200 {object} GetUsersResponse "Успешное получение списка пользователей"
 // @Failure 400 {object} core_http_response.ErrorResponse "Bad request"
 // @Failure 500 {object} core_http_response.ErrorResponse "Internal server error"
-// @Router /users [get]
+// @Router /api/v1/users [get]
 func (h *UsersHTTPHandler) GetUsers(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

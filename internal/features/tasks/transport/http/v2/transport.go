@@ -6,8 +6,11 @@ import (
 
 	"github.com/LisLisich/RESTAPI/internal/core/domain"
 	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
+	core_http_response "github.com/LisLisich/RESTAPI/internal/core/transport/http/response"
 	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
 )
+
+type ErrorResponse = core_http_response.ErrorResponse
 
 type TasksService interface {
 	CreateTask(ctx context.Context, task domain.Task) (domain.Task, error)

@@ -36,7 +36,7 @@ type LoginResponse struct {
 // @Failure 400 {object} core_http_response.ErrorResponse "Некорректный запрос"
 // @Failure 401 {object} core_http_response.ErrorResponse "Неверные учетные данные"
 // @Failure 500 {object} core_http_response.ErrorResponse "Внутренняя ошибка"
-// @Router /auth/login [post]
+// @Router /api/v2/auth/login [post]
 func (h *IdentityHTTPHandler) Login(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

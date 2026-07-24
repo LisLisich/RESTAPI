@@ -15,6 +15,7 @@ import (
 	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
 	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	health_transport_http "github.com/LisLisich/RESTAPI/internal/features/health/transport/http"
 	identity_google_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/googleoidc"
 	identity_jwt_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/jwt"
 	identity_password_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/password"
@@ -212,6 +213,7 @@ func main() {
 	webRepository := web_fs_repository.NewWebRepository()
 	webService := web_service.NewWebService(webRepository)
 	webTransportHTTP := web_transport_http.NewWebHTTPHandler(webService)
+	healthTransportHTTP := health_transport_http.NewHealthHTTPHandler()
 
 	logger.Debug("initializing HTTP server")
 	httpConfig := core_http_server.NewConfigMust()
@@ -244,6 +246,7 @@ func main() {
 		apiVersionRouterV2,
 	)
 	httpServer.RegisterRoutes(webTransportHTTP.Routes()...)
+	httpServer.RegisterRoutes(healthTransportHTTP.Routes()...)
 	httpServer.RegisterSwagger()
 
 	if err := httpServer.Run(ctx); err != nil {

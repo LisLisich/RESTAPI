@@ -1,5 +1,6 @@
 services:
   todoapp:
+    image: ghcr.io/lislisich/fintask:${IMAGE_TAG:-latest}
     build:
       context: ${PROJECT_ROOT}
       dockerfile: ${PROJECT_ROOT}/cmd/todoapp/Dockerfile
@@ -35,8 +36,14 @@ services:
       - LOGGER_FOLDER=/app/out/logs
     volumes:
       - ${PROJECT_ROOT}/out/logs:/app/out/logs
-    ports:
-      - "5050:5050"
+    expose:
+      - "5050"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5050/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
     restart: always
     networks:         
       - app-net
@@ -80,6 +87,8 @@ services:
     networks:
       - app-net
     restart: always 
+    profiles:
+      - dev
 
   swagger:
     build:
@@ -96,6 +105,30 @@ services:
       - ${PROJECT_ROOT}:/code
     working_dir: /code 
 
+  caddy:
+    image: caddy:2.10-alpine
+    container_name: fintask-caddy
+    depends_on:
+      todoapp:
+        condition: service_healthy
+    environment:
+      - DOMAIN=${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ${PROJECT_ROOT}/deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: always
+    networks:
+      - app-net
+
 networks:
   app-net:
     driver: bridge
+
+volumes:
+  caddy-data:
+  caddy-config:

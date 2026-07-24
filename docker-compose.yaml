@@ -21,6 +21,12 @@ services:
       - YOOKASSA_SHOP_ID=${YOOKASSA_SHOP_ID}
       - YOOKASSA_SECRET_KEY=${YOOKASSA_SECRET_KEY}
       - YOOKASSA_RETURN_URL=${YOOKASSA_RETURN_URL}
+      - SMTP_ENABLED=${SMTP_ENABLED}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_FROM=${SMTP_FROM}
       - LOGGER_FOLDER=/app/out/logs
     volumes:
       - ${PROJECT_ROOT}/out/logs:/app/out/logs

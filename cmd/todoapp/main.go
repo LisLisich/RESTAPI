@@ -22,6 +22,10 @@ import (
 	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
 	identity_transport_http "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http"
 	identity_http_middleware "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http/middleware"
+	notifications_smtp_provider "github.com/LisLisich/RESTAPI/internal/features/notifications/provider/smtp"
+	notifications_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/notifications/repository/postgres"
+	notifications_service "github.com/LisLisich/RESTAPI/internal/features/notifications/service"
+	notifications_transport_http "github.com/LisLisich/RESTAPI/internal/features/notifications/transport/http"
 	payments_yookassa_provider "github.com/LisLisich/RESTAPI/internal/features/payments/provider/yookassa"
 	payments_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/payments/repository/postgres"
 	payments_service "github.com/LisLisich/RESTAPI/internal/features/payments/service"
@@ -132,6 +136,30 @@ func main() {
 		authenticationMiddleware,
 	)
 
+	logger.Debug("initializing feature", zap.String("feature", "notifications"))
+	notificationRepository := notifications_postgres_repository.NewNotificationRepository(pool)
+	smtpConfig := notifications_smtp_provider.NewConfigMust()
+	var emailSender notifications_service.EmailSender = notifications_smtp_provider.DisabledSender{}
+	if smtpConfig.Enabled {
+		emailSender = notifications_smtp_provider.NewSender(smtpConfig)
+	}
+	notificationDispatcher := notifications_service.NewNotificationDispatcher(
+		notificationRepository,
+		emailSender,
+	)
+	outboxProcessor := notifications_service.NewProcessor(
+		notificationRepository,
+		notificationDispatcher,
+		5,
+		time.Minute,
+		time.Now,
+	)
+	notificationsTransportHTTP := notifications_transport_http.NewNotificationHTTPHandler(
+		notificationRepository,
+		authenticationMiddleware,
+	)
+	go runOutboxProcessor(ctx, logger, outboxProcessor)
+
 	yooKassaConfig := payments_yookassa_provider.NewConfigMust()
 	var paymentsTransportHTTP *payments_transport_http.PaymentHTTPHandler
 	if yooKassaConfig.Enabled {
@@ -186,6 +214,7 @@ func main() {
 	apiVersionRouterV2.RegisterRoutes(identityTransportHTTP.Routes()...)
 	apiVersionRouterV2.RegisterRoutes(tasksTransportHTTPV2.Routes()...)
 	apiVersionRouterV2.RegisterRoutes(walletTransportHTTP.Routes()...)
+	apiVersionRouterV2.RegisterRoutes(notificationsTransportHTTP.Routes()...)
 	if paymentsTransportHTTP != nil {
 		apiVersionRouterV2.RegisterRoutes(paymentsTransportHTTP.Routes()...)
 	}
@@ -199,5 +228,28 @@ func main() {
 
 	if err := httpServer.Run(ctx); err != nil {
 		logger.Error("HTTP server run error", zap.Error(err))
+	}
+}
+
+func runOutboxProcessor(
+	ctx context.Context,
+	logger *core_logger.Logger,
+	processor *notifications_service.Processor,
+) {
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+	for {
+		processed, err := processor.ProcessOne(ctx)
+		if err != nil && ctx.Err() == nil {
+			logger.Warn("outbox event processing failed", zap.Error(err))
+		}
+		if processed && err == nil {
+			continue
+		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+		}
 	}
 }

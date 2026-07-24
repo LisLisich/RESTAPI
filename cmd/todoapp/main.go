@@ -13,6 +13,11 @@ import (
 	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
 	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	identity_password_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/password"
+	identity_token_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/token"
+	identity_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/identity/repository/postgres"
+	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
+	identity_transport_http "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http"
 	statistics_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/statistics/repository/postgres"
 	statistics_service "github.com/LisLisich/RESTAPI/internal/features/statistics/service"
 	statistics_transport_http "github.com/LisLisich/RESTAPI/internal/features/statistics/transport/http"
@@ -61,6 +66,20 @@ func main() {
 		logger.Fatal("failed to init postgres connection pool", zap.Error(err))
 	}
 	defer pool.Close()
+	logger.Debug("initializing feature", zap.String("feature", "identity"))
+	identityRepository := identity_postgres_repository.NewIdentityRepository(pool)
+	passwordHasher := identity_password_provider.NewArgon2idHasher(
+		identity_password_provider.DefaultArgon2idConfig(),
+	)
+	verificationTokenIssuer := identity_token_provider.NewRandomIssuer(32)
+	identityService := identity_service.NewIdentityService(
+		identityRepository,
+		passwordHasher,
+		verificationTokenIssuer,
+		time.Now,
+	)
+	identityTransportHTTP := identity_transport_http.NewIdentityHTTPHandler(identityService)
+
 	logger.Debug("initializing feature", zap.String("feature", "users"))
 	usersRepository := users_postgres_repository.NewUserRepository(pool)
 	usersService := users_service.NewUserService(usersRepository)
@@ -98,8 +117,12 @@ func main() {
 	apiVersionRouterV1.RegisterRoutes(tasksTransportHTTP.Routes()...)
 	apiVersionRouterV1.RegisterRoutes(statisticsTransportHTTP.Routes()...)
 
+	apiVersionRouterV2 := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion2)
+	apiVersionRouterV2.RegisterRoutes(identityTransportHTTP.Routes()...)
+
 	httpServer.RegisterAPIRouters(
 		apiVersionRouterV1,
+		apiVersionRouterV2,
 	)
 	httpServer.RegisterRoutes(webTransportHTTP.Routes()...)
 	httpServer.RegisterSwagger()

@@ -5,10 +5,24 @@ import (
 	"time"
 )
 
-type Pool interface {
+type DBTX interface {
 	Query(ctx context.Context, sql string, args ...any) (Rows, error)
 	QueryRow(ctx context.Context, sql string, args ...any) Row
 	Exec(ctx context.Context, sql string, arguments ...any) (CommandTag, error)
+}
+
+type Tx interface {
+	DBTX
+	Commit(ctx context.Context) error
+	Rollback(ctx context.Context) error
+}
+
+type Transactor interface {
+	Begin(ctx context.Context) (Tx, error)
+}
+
+type Pool interface {
+	DBTX
 	Close()
 	OpTimeout() time.Duration
 }

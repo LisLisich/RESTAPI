@@ -62,6 +62,9 @@ func TestJSONResponseWritesStatusAndBody(t *testing.T) {
 	if response.Code != http.StatusCreated {
 		t.Fatalf("expected status %d, got %d", http.StatusCreated, response.Code)
 	}
+	if contentType := response.Header().Get("Content-Type"); contentType != "application/json; charset=utf-8" {
+		t.Fatalf("expected JSON content type, got %q", contentType)
+	}
 	if response.Body.String() != "{\"status\":\"ok\"}\n" {
 		t.Fatalf("expected json body, got %q", response.Body.String())
 	}

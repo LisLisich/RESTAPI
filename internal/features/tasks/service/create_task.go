@@ -7,7 +7,7 @@ import (
 	"github.com/LisLisich/RESTAPI/internal/core/domain"
 )
 
-func (s *TasksService) CreatedTask(
+func (s *TasksService) CreateTask(
 	ctx context.Context,
 	task domain.Task,
 ) (domain.Task, error) {
@@ -16,7 +16,7 @@ func (s *TasksService) CreatedTask(
 	}
 	task, err := s.tasksRepository.CreateTask(ctx, task)
 	if err != nil {
-		return domain.Task{}, fmt.Errorf("created task: %w", err)
+		return domain.Task{}, fmt.Errorf("create task: %w", err)
 	}
 	return task, nil
 }

@@ -63,14 +63,14 @@ type PatchUserResponse TaskDTOResponse
 // @Failure      404      {object}  core_http_response.ErrorResponse "Task not found"
 // @Failure      409      {object}  core_http_response.ErrorResponse "Conflict"
 // @Failure      500      {object}  core_http_response.ErrorResponse "Internal server error"
-// @Router       /tasks/{id} [patch]
+// @Router       /api/v1/tasks/{id} [patch]
 func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	taskID, err := core_http_request.GetIntPathValue(r, "id")
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get taskID path value",
 		)
@@ -78,7 +78,7 @@ func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 	}
 	var request PatchTaskRequest
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to decode and validate HTTP request",
 		)
@@ -87,7 +87,7 @@ func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 	taskPatch := taskPatchFromRequest(request)
 	taskDomain, err := h.tasksService.PatchTask(ctx, taskID, taskPatch)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to patch task",
 		)
@@ -97,13 +97,12 @@ func (h *TasksHTTPHandler) PatchTask(rw http.ResponseWriter, r *http.Request) {
 	responseHandler.JSONResponse(response, http.StatusOK)
 	log.Debug(
 		fmt.Sprintf(
-			"PatchTaskRequest fields:\nTitile: '%v'\nDescription: '%v'\nCompleted: '%v'",
+			"PatchTaskRequest fields:\nTitle: '%v'\nDescription: '%v'\nCompleted: '%v'",
 			request.Title,
 			request.Description,
 			request.Completed,
 		),
 	)
-	rw.WriteHeader(http.StatusOK)
 }
 
 func taskPatchFromRequest(request PatchTaskRequest) domain.TaskPatch {

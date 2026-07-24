@@ -10,7 +10,7 @@ func (s *TasksService) DeleteTask(
 	id int,
 ) error {
 	if err := s.tasksRepository.DeleteTask(ctx, id); err != nil {
-		return fmt.Errorf("delete user: %w", err)
+		return fmt.Errorf("delete task: %w", err)
 	}
 	return nil
 }

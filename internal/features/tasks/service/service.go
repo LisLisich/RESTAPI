@@ -34,6 +34,14 @@ type TasksRepository interface {
 		id int,
 		patch domain.Task,
 	) (domain.Task, error)
+	GetTaskForUser(ctx context.Context, id int, userID int) (domain.Task, error)
+	PatchTaskForUser(
+		ctx context.Context,
+		id int,
+		userID int,
+		task domain.Task,
+	) (domain.Task, error)
+	DeleteTaskForUser(ctx context.Context, id int, userID int) error
 }
 
 func NewTasksService(
@@ -42,11 +50,4 @@ func NewTasksService(
 	return &TasksService{
 		tasksRepository: tasksRepository,
 	}
-}
-
-func (s *TasksService) CreateTask(
-	ctx context.Context,
-	task domain.Task,
-) (domain.Task, error) {
-	return s.tasksRepository.CreateTask(ctx, task)
 }

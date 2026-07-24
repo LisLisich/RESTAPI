@@ -21,14 +21,14 @@ type GetUsersResponse []UserDTOResponse
 // @Success 200 {object} GetUsersResponse "Успешное получение списка пользователей"
 // @Failure 400 {object} core_http_response.ErrorResponse "Bad request"
 // @Failure 500 {object} core_http_response.ErrorResponse "Internal server error"
-// @Router /users [get]
+// @Router /api/v1/users [get]
 func (h *UsersHTTPHandler) GetUsers(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	limit, offset, err := getLimitOffsetQueryParams(r)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get 'limit'/'offset' query param",
 		)
@@ -36,7 +36,7 @@ func (h *UsersHTTPHandler) GetUsers(rw http.ResponseWriter, r *http.Request) {
 	}
 	userDomains, err := h.usersService.GetUsers(ctx, limit, offset)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get users",
 		)
@@ -49,11 +49,11 @@ func (h *UsersHTTPHandler) GetUsers(rw http.ResponseWriter, r *http.Request) {
 
 func getLimitOffsetQueryParams(r *http.Request) (*int, *int, error) {
 	const (
-		limitQureParamKey   = "limit"
+		limitQueryParamKey  = "limit"
 		offsetQueryParamKey = "offset"
 	)
 
-	limit, err := core_http_request.GetIntQueryParam(r, limitQureParamKey)
+	limit, err := core_http_request.GetIntQueryParam(r, limitQueryParamKey)
 	if err != nil {
 		return nil, nil, fmt.Errorf("get 'limit' query param: %w", err)
 	}

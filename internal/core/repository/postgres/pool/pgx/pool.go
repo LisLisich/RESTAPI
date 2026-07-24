@@ -50,7 +50,7 @@ func (p *Pool) Query(
 ) (core_postgres_pool.Rows, error) {
 	rows, err := p.Pool.Query(ctx, sql, args...)
 	if err != nil {
-		return nil, err
+		return nil, mapErrors(err)
 	}
 	return pgxRows{rows}, nil
 }
@@ -69,9 +69,17 @@ func (p *Pool) Exec(
 ) (core_postgres_pool.CommandTag, error) {
 	tag, err := p.Pool.Exec(ctx, sql, arguments...)
 	if err != nil {
-		return nil, err
+		return nil, mapErrors(err)
 	}
 	return pgxCommandTag{tag}, nil
+}
+
+func (p *Pool) Begin(ctx context.Context) (core_postgres_pool.Tx, error) {
+	tx, err := p.Pool.Begin(ctx)
+	if err != nil {
+		return nil, mapErrors(err)
+	}
+	return pgxTx{tx}, nil
 }
 
 func (p *Pool) OpTimeout() time.Duration {

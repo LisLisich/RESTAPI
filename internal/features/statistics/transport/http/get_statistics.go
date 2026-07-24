@@ -23,24 +23,26 @@ type GetStatisticsResponse StatisticsDTOResponse
 // @Success      200      {object}  GetStatisticsResponse "Успешное получение статистики"
 // @Failure      400      {object}  core_http_response.ErrorResponse "Bad request"
 // @Failure      500      {object}  core_http_response.ErrorResponse "Internal server error"
-// @Router       /statistics [get]
+// @Router       /api/v1/statistics [get]
 func (h *StatisticsHTTPHandler) GetStatistics(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	userID, from, to, err := getUserIDFromToQueryParams(r)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get 'userID'/'from'/'to' query param",
 		)
+		return
 	}
 	statisticsDomain, err := h.statisticsService.GetStatistics(ctx, userID, from, to)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get statistics",
 		)
+		return
 	}
 	response := StatisticsDTOFromDomain(statisticsDomain)
 	responseHandler.JSONResponse(response, http.StatusOK)

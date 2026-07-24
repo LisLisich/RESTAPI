@@ -35,7 +35,7 @@ type PatchUserRequest struct {
 // @Failure 404 {object} core_http_response.ErrorResponse "User not found"
 // @Failure 409 {object} core_http_response.ErrorResponse "Conflict"
 // @Failure 500 {object} core_http_response.ErrorResponse "Internal server error"
-// @Router /users/{id} [patch]
+// @Router /api/v1/users/{id} [patch]
 func (r *PatchUserRequest) Validate() error {
 	if r.FullName.Set {
 		if r.FullName.Value == nil {
@@ -68,7 +68,7 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 	userID, err := core_http_request.GetIntPathValue(r, "id")
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to get userID path value",
 		)
@@ -77,7 +77,7 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 
 	var request PatchUserRequest
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to decode and validate HTTP request",
 		)
@@ -87,7 +87,7 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 	userPatch := userPatchFromRequest(request)
 	userDomain, err := h.usersService.PatchUser(ctx, userID, userPatch)
 	if err != nil {
-		responseHandler.ErroResponse(
+		responseHandler.ErrorResponse(
 			err,
 			"failed to patch user",
 		)
@@ -104,7 +104,6 @@ func (h *UsersHTTPHandler) PatchUser(rw http.ResponseWriter, r *http.Request) {
 			request.PhoneNumber,
 		),
 	)
-	rw.WriteHeader(http.StatusOK)
 }
 
 func userPatchFromRequest(request PatchUserRequest) domain.UserPatch {

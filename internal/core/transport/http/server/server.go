@@ -44,7 +44,7 @@ func (s *HTTPServer) RegisterAPIRouters(routers ...*APIVersionRouter) {
 	}
 }
 
-func (s *HTTPServer) RegisterRoytes(routes ...Route) {
+func (s *HTTPServer) RegisterRoutes(routes ...Route) {
 	for _, route := range routes {
 		pattern := fmt.Sprintf("%s %s", route.Method, route.Path)
 
@@ -95,7 +95,7 @@ func (h *HTTPServer) Run(ctx context.Context) error {
 		h.log.Warn("shutdown HTTP server...")
 		shutdownCtx, cancel := context.WithTimeout(
 			context.Background(),
-			h.config.ShutdownTimeoit,
+			h.config.ShutdownTimeout,
 		)
 		defer cancel()
 		if err := server.Shutdown(shutdownCtx); err != nil {

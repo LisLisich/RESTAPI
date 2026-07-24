@@ -30,6 +30,7 @@ func (h *HTTPResponseHandler) JSONResponse(
 	responseBody any,
 	statusCode int,
 ) {
+	h.rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	h.rw.WriteHeader(statusCode)
 	if err := json.NewEncoder(h.rw).Encode(responseBody); err != nil {
 		h.log.Error("write HTTP response", zap.Error(err))
@@ -41,14 +42,14 @@ func (h *HTTPResponseHandler) NoContentResponse() {
 }
 
 func (h *HTTPResponseHandler) HTMLResponse(html []byte) {
-	h.rw.WriteHeader(http.StatusOK)
 	h.rw.Header().Set("Content-Type", "text/html; charset=utf-8")
+	h.rw.WriteHeader(http.StatusOK)
 	if _, err := h.rw.Write(html); err != nil {
 		h.log.Error("write HTML HTTP response", zap.Error(err))
 	}
 }
 
-func (h *HTTPResponseHandler) ErroResponse(err error, msg string) {
+func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
 	var (
 		statusCode int
 		logFunc    func(string, ...zap.Field)
@@ -63,6 +64,12 @@ func (h *HTTPResponseHandler) ErroResponse(err error, msg string) {
 	case errors.Is(err, core_errors.ErrConflict):
 		statusCode = http.StatusConflict
 		logFunc = h.log.Warn
+	case errors.Is(err, core_errors.ErrUnauthorized):
+		statusCode = http.StatusUnauthorized
+		logFunc = h.log.Warn
+	case errors.Is(err, core_errors.ErrForbidden):
+		statusCode = http.StatusForbidden
+		logFunc = h.log.Warn
 	default:
 		statusCode = http.StatusInternalServerError
 		logFunc = h.log.Error
@@ -70,7 +77,6 @@ func (h *HTTPResponseHandler) ErroResponse(err error, msg string) {
 	logFunc(msg, zap.Error(err))
 	h.errorResponse(
 		statusCode,
-		err,
 		msg,
 	)
 }
@@ -81,18 +87,16 @@ func (h *HTTPResponseHandler) PanicResponse(p any, msg string) {
 	h.log.Error(msg, zap.Error(err))
 	h.errorResponse(
 		statusCode,
-		err,
 		msg,
 	)
 }
 
 func (h *HTTPResponseHandler) errorResponse(
 	statusCode int,
-	err error,
 	msg string,
 ) {
 	response := ErrorResponse{
-		Error:   err.Error(),
+		Error:   http.StatusText(statusCode),
 		Message: msg,
 	}
 

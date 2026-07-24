@@ -18,12 +18,14 @@ import (
 	identity_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/identity/repository/postgres"
 	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
 	identity_transport_http "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http"
+	identity_http_middleware "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http/middleware"
 	statistics_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/statistics/repository/postgres"
 	statistics_service "github.com/LisLisich/RESTAPI/internal/features/statistics/service"
 	statistics_transport_http "github.com/LisLisich/RESTAPI/internal/features/statistics/transport/http"
 	task_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/tasks/repository/postgres"
 	task_service "github.com/LisLisich/RESTAPI/internal/features/tasks/service"
 	tasks_transport_http "github.com/LisLisich/RESTAPI/internal/features/tasks/transport/http"
+	tasks_transport_http_v2 "github.com/LisLisich/RESTAPI/internal/features/tasks/transport/http/v2"
 	users_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/users/repository/postgres"
 	users_service "github.com/LisLisich/RESTAPI/internal/features/users/service"
 	users_transport_http "github.com/LisLisich/RESTAPI/internal/features/users/transport/http"
@@ -89,6 +91,14 @@ func main() {
 	tasksRepository := task_postgres_repository.NewTaskRepository(pool)
 	tasksService := task_service.NewTasksService(tasksRepository)
 	tasksTransportHTTP := tasks_transport_http.NewTasksHTTPHandler(tasksService)
+	sessionMiddleware := identity_http_middleware.Session(
+		identityService,
+		identity_transport_http.SessionCookieName,
+	)
+	tasksTransportHTTPV2 := tasks_transport_http_v2.NewTasksHTTPHandler(
+		tasksService,
+		sessionMiddleware,
+	)
 
 	logger.Debug("initializing feature", zap.String("initializing", "feature"))
 	statisticsRepository := statistics_postgres_repository.NewStatisticsRepository(pool)
@@ -119,6 +129,7 @@ func main() {
 
 	apiVersionRouterV2 := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion2)
 	apiVersionRouterV2.RegisterRoutes(identityTransportHTTP.Routes()...)
+	apiVersionRouterV2.RegisterRoutes(tasksTransportHTTPV2.Routes()...)
 
 	httpServer.RegisterAPIRouters(
 		apiVersionRouterV1,

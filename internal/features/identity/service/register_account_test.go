@@ -14,6 +14,26 @@ type fakeRegistrationRepository struct {
 	registerCalled bool
 	registration   Registration
 	err            error
+
+	verifyCalled bool
+	verifyHash   []byte
+	verifiedAt   time.Time
+	verifyErr    error
+
+	passwordAccount PasswordAccount
+	getPasswordErr  error
+	getPasswordCall bool
+	gotEmail        string
+
+	createSessionCalled bool
+	createdSession      StoredSession
+	createSessionErr    error
+
+	authSession StoredAuthenticationSession
+	getSession  bool
+	sessionHash []byte
+	sessionNow  time.Time
+	sessionErr  error
 }
 
 func (r *fakeRegistrationRepository) Register(
@@ -31,11 +51,73 @@ func (r *fakeRegistrationRepository) Register(
 	return account, nil
 }
 
+func (r *fakeRegistrationRepository) GetPasswordAccount(
+	_ context.Context,
+	email string,
+) (PasswordAccount, error) {
+	r.getPasswordCall = true
+	r.gotEmail = email
+	if r.getPasswordErr != nil {
+		return PasswordAccount{}, r.getPasswordErr
+	}
+	return r.passwordAccount, nil
+}
+
+func (r *fakeRegistrationRepository) CreateSession(
+	_ context.Context,
+	session StoredSession,
+) error {
+	r.createSessionCalled = true
+	r.createdSession = session
+	return r.createSessionErr
+}
+
+func (r *fakeRegistrationRepository) GetSession(
+	_ context.Context,
+	tokenHash []byte,
+	now time.Time,
+) (StoredAuthenticationSession, error) {
+	r.getSession = true
+	r.sessionHash = tokenHash
+	r.sessionNow = now
+	if r.sessionErr != nil {
+		return StoredAuthenticationSession{}, r.sessionErr
+	}
+	return r.authSession, nil
+}
+
+func (r *fakeRegistrationRepository) VerifyEmail(
+	_ context.Context,
+	tokenHash []byte,
+	verifiedAt time.Time,
+) (domain.Account, error) {
+	r.verifyCalled = true
+	r.verifyHash = tokenHash
+	r.verifiedAt = verifiedAt
+	if r.verifyErr != nil {
+		return domain.Account{}, r.verifyErr
+	}
+
+	account, err := domain.NewAccountUninitialized(42, "user@example.com")
+	if err != nil {
+		return domain.Account{}, err
+	}
+	if err := account.VerifyEmail(verifiedAt); err != nil {
+		return domain.Account{}, err
+	}
+	return account, nil
+}
+
 type fakePasswordHasher struct {
 	hashCalled bool
 	password   string
 	hash       string
 	err        error
+
+	verifyCalled bool
+	verifyResult bool
+	verifyErr    error
+	encodedHash  string
 }
 
 func (h *fakePasswordHasher) Hash(password string) (string, error) {
@@ -44,15 +126,38 @@ func (h *fakePasswordHasher) Hash(password string) (string, error) {
 	return h.hash, h.err
 }
 
+func (h *fakePasswordHasher) Verify(password string, encodedHash string) (bool, error) {
+	h.verifyCalled = true
+	h.password = password
+	h.encodedHash = encodedHash
+	return h.verifyResult, h.verifyErr
+}
+
 type fakeTokenIssuer struct {
 	issueCalled bool
 	token       IssuedToken
+	tokens      []IssuedToken
 	err         error
+
+	hashCalled bool
+	rawToken   string
+	hash       []byte
 }
 
 func (i *fakeTokenIssuer) Issue() (IssuedToken, error) {
 	i.issueCalled = true
+	if len(i.tokens) > 0 {
+		token := i.tokens[0]
+		i.tokens = i.tokens[1:]
+		return token, i.err
+	}
 	return i.token, i.err
+}
+
+func (i *fakeTokenIssuer) Hash(rawToken string) []byte {
+	i.hashCalled = true
+	i.rawToken = rawToken
+	return i.hash
 }
 
 func TestRegisterAccountBuildsAtomicRegistration(t *testing.T) {

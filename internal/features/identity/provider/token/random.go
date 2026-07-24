@@ -33,9 +33,13 @@ func (i *RandomIssuer) Issue() (identity_service.IssuedToken, error) {
 	}
 
 	rawToken := base64.RawURLEncoding.EncodeToString(randomBytes)
-	tokenHash := sha256.Sum256([]byte(rawToken))
 	return identity_service.IssuedToken{
 		Raw:  rawToken,
-		Hash: tokenHash[:],
+		Hash: i.Hash(rawToken),
 	}, nil
+}
+
+func (*RandomIssuer) Hash(rawToken string) []byte {
+	tokenHash := sha256.Sum256([]byte(rawToken))
+	return tokenHash[:]
 }

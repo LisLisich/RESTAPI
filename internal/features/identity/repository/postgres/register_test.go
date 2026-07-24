@@ -16,6 +16,14 @@ import (
 type fakePool struct {
 	tx       *fakeTx
 	beginErr error
+
+	queryRowSQL  string
+	queryRowArgs []any
+	queryRow     core_postgres_pool.Row
+
+	execSQL  string
+	execArgs []any
+	execErr  error
 }
 
 func (p *fakePool) Begin(context.Context) (core_postgres_pool.Tx, error) {
@@ -29,12 +37,23 @@ func (*fakePool) Query(context.Context, string, ...any) (core_postgres_pool.Rows
 	panic("unexpected pool Query call")
 }
 
-func (*fakePool) QueryRow(context.Context, string, ...any) core_postgres_pool.Row {
-	panic("unexpected pool QueryRow call")
+func (p *fakePool) QueryRow(_ context.Context, sql string, args ...any) core_postgres_pool.Row {
+	p.queryRowSQL = sql
+	p.queryRowArgs = args
+	return p.queryRow
 }
 
-func (*fakePool) Exec(context.Context, string, ...any) (core_postgres_pool.CommandTag, error) {
-	panic("unexpected pool Exec call")
+func (p *fakePool) Exec(
+	_ context.Context,
+	sql string,
+	args ...any,
+) (core_postgres_pool.CommandTag, error) {
+	p.execSQL = sql
+	p.execArgs = args
+	if p.execErr != nil {
+		return nil, p.execErr
+	}
+	return fakeCommandTag{}, nil
 }
 
 func (*fakePool) Close() {}

@@ -33,6 +33,16 @@ func TestErrorResponseMapsSentinelErrorsToStatusCodes(t *testing.T) {
 			wantStatus: http.StatusConflict,
 		},
 		{
+			name:       "unauthorized",
+			err:        core_errors.ErrUnauthorized,
+			wantStatus: http.StatusUnauthorized,
+		},
+		{
+			name:       "forbidden",
+			err:        core_errors.ErrForbidden,
+			wantStatus: http.StatusForbidden,
+		},
+		{
 			name:       "unknown",
 			err:        errors.New("unknown"),
 			wantStatus: http.StatusInternalServerError,

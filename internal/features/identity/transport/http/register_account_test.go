@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/LisLisich/RESTAPI/internal/core/domain"
 	core_errors "github.com/LisLisich/RESTAPI/internal/core/errors"
@@ -19,6 +20,14 @@ type fakeIdentityService struct {
 	registerCalled bool
 	input          identity_service.RegisterAccountInput
 	err            error
+
+	verifyCalled bool
+	rawToken     string
+	verifyErr    error
+
+	loginCalled bool
+	loginInput  identity_service.LoginInput
+	loginErr    error
 }
 
 func (s *fakeIdentityService) RegisterAccount(
@@ -33,6 +42,49 @@ func (s *fakeIdentityService) RegisterAccount(
 
 	account, err := domain.NewAccountUninitialized(42, input.Email)
 	if err != nil {
+		return domain.Account{}, err
+	}
+	return account, nil
+}
+
+func (s *fakeIdentityService) Login(
+	_ context.Context,
+	input identity_service.LoginInput,
+) (identity_service.BrowserSession, error) {
+	s.loginCalled = true
+	s.loginInput = input
+	if s.loginErr != nil {
+		return identity_service.BrowserSession{}, s.loginErr
+	}
+
+	account := domain.Account{
+		UserID: 42,
+		Email:  "user@example.com",
+		Status: domain.AccountStatusActive,
+	}
+	return identity_service.BrowserSession{
+		Account:   account,
+		Token:     "session-token",
+		CSRFToken: "csrf-token",
+		ExpiresAt: time.Now().Add(12 * time.Hour),
+	}, nil
+}
+
+func (s *fakeIdentityService) VerifyEmail(
+	_ context.Context,
+	rawToken string,
+) (domain.Account, error) {
+	s.verifyCalled = true
+	s.rawToken = rawToken
+	if s.verifyErr != nil {
+		return domain.Account{}, s.verifyErr
+	}
+
+	account, err := domain.NewAccountUninitialized(42, "user@example.com")
+	if err != nil {
+		return domain.Account{}, err
+	}
+	if err := account.VerifyEmail(time.Date(2026, time.July, 24, 14, 0, 0, 0, time.UTC)); err != nil {
 		return domain.Account{}, err
 	}
 	return account, nil
@@ -106,8 +158,8 @@ func TestIdentityRoutesExposeV2RegistrationPath(t *testing.T) {
 	handler := NewIdentityHTTPHandler(&fakeIdentityService{})
 	routes := handler.Routes()
 
-	if len(routes) != 1 {
-		t.Fatalf("expected one route, got %d", len(routes))
+	if len(routes) != 3 {
+		t.Fatalf("expected three routes, got %d", len(routes))
 	}
 	if routes[0].Method != http.MethodPost || routes[0].Path != "/auth/register" {
 		t.Fatalf("unexpected registration route: %s %s", routes[0].Method, routes[0].Path)

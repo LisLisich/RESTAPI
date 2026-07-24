@@ -14,6 +14,11 @@ type IdentityService interface {
 		ctx context.Context,
 		input identity_service.RegisterAccountInput,
 	) (domain.Account, error)
+	VerifyEmail(ctx context.Context, rawToken string) (domain.Account, error)
+	Login(
+		ctx context.Context,
+		input identity_service.LoginInput,
+	) (identity_service.BrowserSession, error)
 }
 
 type IdentityHTTPHandler struct {
@@ -30,6 +35,16 @@ func (h *IdentityHTTPHandler) Routes() []core_http_server.Route {
 			Method:  http.MethodPost,
 			Path:    "/auth/register",
 			Handler: h.RegisterAccount,
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/verify-email",
+			Handler: h.VerifyEmail,
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/login",
+			Handler: h.Login,
 		},
 	}
 }

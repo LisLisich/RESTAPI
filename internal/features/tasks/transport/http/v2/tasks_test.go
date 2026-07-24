@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/LisLisich/RESTAPI/internal/core/domain"
 	core_logger "github.com/LisLisich/RESTAPI/internal/core/logger"
@@ -22,6 +23,22 @@ type fakeTasksService struct {
 	gotUserID *int
 	gotLimit  *int
 	gotOffset *int
+
+	getOwnedCall   bool
+	gotOwnedTaskID int
+	gotOwnedUserID int
+	getOwnedErr    error
+
+	patchOwnedCall bool
+	patchedTaskID  int
+	patchedUserID  int
+	patchedPatch   domain.TaskPatch
+	patchOwnedErr  error
+
+	deleteOwnedCall bool
+	deletedTaskID   int
+	deletedUserID   int
+	deleteOwnedErr  error
 }
 
 func (s *fakeTasksService) CreateTask(
@@ -46,6 +63,65 @@ func (s *fakeTasksService) GetTasks(
 	s.gotLimit = limit
 	s.gotOffset = offset
 	return []domain.Task{}, nil
+}
+
+func (s *fakeTasksService) GetOwnedTask(
+	_ context.Context,
+	id int,
+	userID int,
+) (domain.Task, error) {
+	s.getOwnedCall = true
+	s.gotOwnedTaskID = id
+	s.gotOwnedUserID = userID
+	if s.getOwnedErr != nil {
+		return domain.Task{}, s.getOwnedErr
+	}
+	return domain.NewTask(
+		id,
+		1,
+		"owned task",
+		nil,
+		false,
+		time.Date(2026, time.July, 25, 12, 0, 0, 0, time.UTC),
+		nil,
+		userID,
+	), nil
+}
+
+func (s *fakeTasksService) PatchOwnedTask(
+	_ context.Context,
+	id int,
+	userID int,
+	patch domain.TaskPatch,
+) (domain.Task, error) {
+	s.patchOwnedCall = true
+	s.patchedTaskID = id
+	s.patchedUserID = userID
+	s.patchedPatch = patch
+	if s.patchOwnedErr != nil {
+		return domain.Task{}, s.patchOwnedErr
+	}
+	return domain.NewTask(
+		id,
+		2,
+		"updated title",
+		nil,
+		false,
+		time.Date(2026, time.July, 25, 12, 0, 0, 0, time.UTC),
+		nil,
+		userID,
+	), nil
+}
+
+func (s *fakeTasksService) DeleteOwnedTask(
+	_ context.Context,
+	id int,
+	userID int,
+) error {
+	s.deleteOwnedCall = true
+	s.deletedTaskID = id
+	s.deletedUserID = userID
+	return s.deleteOwnedErr
 }
 
 func TestCreateTaskUsesAuthenticatedOwner(t *testing.T) {

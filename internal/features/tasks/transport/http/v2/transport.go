@@ -17,6 +17,14 @@ type TasksService interface {
 		limit *int,
 		offset *int,
 	) ([]domain.Task, error)
+	GetOwnedTask(ctx context.Context, id int, userID int) (domain.Task, error)
+	PatchOwnedTask(
+		ctx context.Context,
+		id int,
+		userID int,
+		patch domain.TaskPatch,
+	) (domain.Task, error)
+	DeleteOwnedTask(ctx context.Context, id int, userID int) error
 }
 
 type TasksHTTPHandler struct {
@@ -50,6 +58,24 @@ func (h *TasksHTTPHandler) Routes() []core_http_server.Route {
 			Method:     http.MethodGet,
 			Path:       "/tasks",
 			Handler:    h.GetTasks,
+			Middleware: middleware,
+		},
+		{
+			Method:     http.MethodGet,
+			Path:       "/tasks/{id}",
+			Handler:    h.GetTask,
+			Middleware: middleware,
+		},
+		{
+			Method:     http.MethodPatch,
+			Path:       "/tasks/{id}",
+			Handler:    h.PatchTask,
+			Middleware: middleware,
+		},
+		{
+			Method:     http.MethodDelete,
+			Path:       "/tasks/{id}",
+			Handler:    h.DeleteTask,
 			Middleware: middleware,
 		},
 	}

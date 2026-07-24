@@ -34,6 +34,22 @@ type fakeTaskRepository struct {
 	patchedTaskID   int
 	patchedTask     domain.Task
 	patchTaskErr    error
+
+	getOwnedTaskCalled bool
+	ownedTaskID        int
+	ownedTaskUserID    int
+	getOwnedTaskErr    error
+
+	patchOwnedTaskCalled bool
+	patchedOwnedTaskID   int
+	patchedOwnedUserID   int
+	patchedOwnedTask     domain.Task
+	patchOwnedTaskErr    error
+
+	deleteOwnedTaskCalled bool
+	deletedOwnedTaskID    int
+	deletedOwnedUserID    int
+	deleteOwnedTaskErr    error
 }
 
 var _ TasksRepository = (*fakeTaskRepository)(nil)
@@ -117,6 +133,50 @@ func (f *fakeTaskRepository) PatchTask(
 	}
 
 	return task, nil
+}
+
+func (f *fakeTaskRepository) GetTaskForUser(
+	_ context.Context,
+	id int,
+	userID int,
+) (domain.Task, error) {
+	f.getOwnedTaskCalled = true
+	f.ownedTaskID = id
+	f.ownedTaskUserID = userID
+	if f.getOwnedTaskErr != nil {
+		return domain.Task{}, f.getOwnedTaskErr
+	}
+	if f.storedTask.ID != 0 {
+		return f.storedTask, nil
+	}
+	return newServiceTask(id, userID, "owned task"), nil
+}
+
+func (f *fakeTaskRepository) PatchTaskForUser(
+	_ context.Context,
+	id int,
+	userID int,
+	task domain.Task,
+) (domain.Task, error) {
+	f.patchOwnedTaskCalled = true
+	f.patchedOwnedTaskID = id
+	f.patchedOwnedUserID = userID
+	f.patchedOwnedTask = task
+	if f.patchOwnedTaskErr != nil {
+		return domain.Task{}, f.patchOwnedTaskErr
+	}
+	return task, nil
+}
+
+func (f *fakeTaskRepository) DeleteTaskForUser(
+	_ context.Context,
+	id int,
+	userID int,
+) error {
+	f.deleteOwnedTaskCalled = true
+	f.deletedOwnedTaskID = id
+	f.deletedOwnedUserID = userID
+	return f.deleteOwnedTaskErr
 }
 
 func TestCreateTaskRejectsInvalidDomainBeforeRepository(t *testing.T) {

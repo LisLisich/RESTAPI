@@ -23,6 +23,11 @@ type IdentityService interface {
 	RequestPasswordReset(ctx context.Context, email string) error
 	ResetPassword(ctx context.Context, rawToken string, newPassword string) error
 	Logout(ctx context.Context, rawSessionToken string) error
+	LoginAPI(
+		ctx context.Context,
+		input identity_service.LoginInput,
+	) (identity_service.TokenPair, error)
+	RefreshAPI(ctx context.Context, rawRefreshToken string) (identity_service.TokenPair, error)
 }
 
 type IdentityHTTPHandler struct {
@@ -73,6 +78,16 @@ func (h *IdentityHTTPHandler) Routes() []core_http_server.Route {
 			Path:       "/auth/logout",
 			Handler:    h.Logout,
 			Middleware: h.protectedRouteMiddleware(),
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/token",
+			Handler: h.LoginAPI,
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/auth/token/refresh",
+			Handler: h.RefreshAPI,
 		},
 	}
 }

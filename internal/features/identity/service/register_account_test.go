@@ -49,6 +49,16 @@ type fakeRegistrationRepository struct {
 	revokeSessionHash   []byte
 	revokeSessionAt     time.Time
 	revokeSessionErr    error
+
+	createRefreshCalled bool
+	createdRefresh      StoredRefreshToken
+	createRefreshErr    error
+
+	rotateRefreshCalled bool
+	oldRefreshHash      []byte
+	rotatedRefresh      StoredRefreshToken
+	rotateRefreshUserID int
+	rotateRefreshErr    error
 }
 
 func (r *fakeRegistrationRepository) Register(
@@ -134,6 +144,29 @@ func (r *fakeRegistrationRepository) RevokeSession(
 	return r.revokeSessionErr
 }
 
+func (r *fakeRegistrationRepository) CreateRefreshToken(
+	_ context.Context,
+	token StoredRefreshToken,
+) error {
+	r.createRefreshCalled = true
+	r.createdRefresh = token
+	return r.createRefreshErr
+}
+
+func (r *fakeRegistrationRepository) RotateRefreshToken(
+	_ context.Context,
+	oldTokenHash []byte,
+	newToken StoredRefreshToken,
+) (int, error) {
+	r.rotateRefreshCalled = true
+	r.oldRefreshHash = oldTokenHash
+	r.rotatedRefresh = newToken
+	if r.rotateRefreshErr != nil {
+		return 0, r.rotateRefreshErr
+	}
+	return r.rotateRefreshUserID, nil
+}
+
 func (r *fakeRegistrationRepository) VerifyEmail(
 	_ context.Context,
 	tokenHash []byte,
@@ -206,6 +239,21 @@ func (i *fakeTokenIssuer) Hash(rawToken string) []byte {
 	i.hashCalled = true
 	i.rawToken = rawToken
 	return i.hash
+}
+
+type fakeAccessTokenIssuer struct {
+	called bool
+	userID int
+	jwtID  string
+	token  string
+	err    error
+}
+
+func (issuer *fakeAccessTokenIssuer) Issue(userID int, jwtID string) (string, error) {
+	issuer.called = true
+	issuer.userID = userID
+	issuer.jwtID = jwtID
+	return issuer.token, issuer.err
 }
 
 func TestRegisterAccountBuildsAtomicRegistration(t *testing.T) {

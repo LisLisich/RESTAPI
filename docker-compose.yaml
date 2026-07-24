@@ -15,6 +15,7 @@ services:
       - POSTGRES_TIMEOUT=${POSTGRES_TIMEOUT}
       - LOGGER_LEVEL=${LOGGER_LEVEL}
       - TIME_ZONE=${TIME_ZONE}
+      - JWT_ED25519_PRIVATE_KEY=${JWT_ED25519_PRIVATE_KEY}
       - LOGGER_FOLDER=/app/out/logs
     volumes:
       - ${PROJECT_ROOT}/out/logs:/app/out/logs
@@ -81,4 +82,4 @@ services:
 
 networks:
   app-net:
-    driver: bridge  
+    driver: bridge

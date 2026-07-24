@@ -41,6 +41,14 @@ type fakeIdentityService struct {
 	logoutCalled bool
 	logoutToken  string
 	logoutErr    error
+
+	loginAPICalled bool
+	loginAPIInput  identity_service.LoginInput
+	loginAPIErr    error
+
+	refreshAPICalled bool
+	refreshToken     string
+	refreshAPIErr    error
 }
 
 func (s *fakeIdentityService) RegisterAccount(
@@ -110,6 +118,40 @@ func (s *fakeIdentityService) Logout(
 	s.logoutCalled = true
 	s.logoutToken = rawSessionToken
 	return s.logoutErr
+}
+
+func (s *fakeIdentityService) LoginAPI(
+	_ context.Context,
+	input identity_service.LoginInput,
+) (identity_service.TokenPair, error) {
+	s.loginAPICalled = true
+	s.loginAPIInput = input
+	if s.loginAPIErr != nil {
+		return identity_service.TokenPair{}, s.loginAPIErr
+	}
+	return identity_service.TokenPair{
+		AccessToken:  "access-token",
+		RefreshToken: "refresh-token",
+		TokenType:    "Bearer",
+		ExpiresIn:    900,
+	}, nil
+}
+
+func (s *fakeIdentityService) RefreshAPI(
+	_ context.Context,
+	rawRefreshToken string,
+) (identity_service.TokenPair, error) {
+	s.refreshAPICalled = true
+	s.refreshToken = rawRefreshToken
+	if s.refreshAPIErr != nil {
+		return identity_service.TokenPair{}, s.refreshAPIErr
+	}
+	return identity_service.TokenPair{
+		AccessToken:  "new-access-token",
+		RefreshToken: "new-refresh-token",
+		TokenType:    "Bearer",
+		ExpiresIn:    900,
+	}, nil
 }
 
 func (s *fakeIdentityService) VerifyEmail(
@@ -200,8 +242,8 @@ func TestIdentityRoutesExposeV2RegistrationPath(t *testing.T) {
 	handler := NewIdentityHTTPHandler(&fakeIdentityService{})
 	routes := handler.Routes()
 
-	if len(routes) != 6 {
-		t.Fatalf("expected six routes, got %d", len(routes))
+	if len(routes) != 8 {
+		t.Fatalf("expected eight routes, got %d", len(routes))
 	}
 	if routes[0].Method != http.MethodPost || routes[0].Path != "/auth/register" {
 		t.Fatalf("unexpected registration route: %s %s", routes[0].Method, routes[0].Path)

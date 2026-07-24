@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/ed25519"
 	"fmt"
 	"os"
 	"os/signal"
@@ -13,6 +14,7 @@ import (
 	core_pgx_pool "github.com/LisLisich/RESTAPI/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/LisLisich/RESTAPI/internal/core/transport/http/middleware"
 	core_http_server "github.com/LisLisich/RESTAPI/internal/core/transport/http/server"
+	identity_jwt_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/jwt"
 	identity_password_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/password"
 	identity_token_provider "github.com/LisLisich/RESTAPI/internal/features/identity/provider/token"
 	identity_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/identity/repository/postgres"
@@ -77,19 +79,30 @@ func main() {
 		identity_password_provider.DefaultArgon2idConfig(),
 	)
 	verificationTokenIssuer := identity_token_provider.NewRandomIssuer(32)
+	jwtConfig := identity_jwt_provider.NewConfigMust()
+	accessTokenIssuer := identity_jwt_provider.NewEd25519Provider(
+		jwtConfig.PrivateKey,
+		jwtConfig.PrivateKey.Public().(ed25519.PublicKey),
+		"fintask",
+		"fintask-cli",
+		15*time.Minute,
+		time.Now,
+	)
 	identityService := identity_service.NewIdentityService(
 		identityRepository,
 		passwordHasher,
 		verificationTokenIssuer,
 		time.Now,
+		identity_service.WithAccessTokenIssuer(accessTokenIssuer),
 	)
-	sessionMiddleware := identity_http_middleware.Session(
+	authenticationMiddleware := identity_http_middleware.Authentication(
 		identityService,
+		accessTokenIssuer,
 		identity_transport_http.SessionCookieName,
 	)
 	identityTransportHTTP := identity_transport_http.NewIdentityHTTPHandler(
 		identityService,
-		sessionMiddleware,
+		authenticationMiddleware,
 	)
 
 	logger.Debug("initializing feature", zap.String("feature", "users"))
@@ -103,7 +116,7 @@ func main() {
 	tasksTransportHTTP := tasks_transport_http.NewTasksHTTPHandler(tasksService)
 	tasksTransportHTTPV2 := tasks_transport_http_v2.NewTasksHTTPHandler(
 		tasksService,
-		sessionMiddleware,
+		authenticationMiddleware,
 	)
 
 	logger.Debug("initializing feature", zap.String("feature", "wallet"))
@@ -111,7 +124,7 @@ func main() {
 	walletService := wallet_service.NewWalletService(walletRepository)
 	walletTransportHTTP := wallet_transport_http.NewWalletHTTPHandler(
 		walletService,
-		sessionMiddleware,
+		authenticationMiddleware,
 	)
 
 	logger.Debug("initializing feature", zap.String("initializing", "feature"))

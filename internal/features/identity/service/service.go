@@ -16,6 +16,7 @@ type IdentityService struct {
 	registrationRepository RegistrationRepository
 	passwordHasher         PasswordHasher
 	tokenIssuer            TokenIssuer
+	accessTokenIssuer      AccessTokenIssuer
 	now                    func() time.Time
 }
 
@@ -41,6 +42,12 @@ type RegistrationRepository interface {
 		resetAt time.Time,
 	) error
 	RevokeSession(ctx context.Context, tokenHash []byte, revokedAt time.Time) error
+	CreateRefreshToken(ctx context.Context, token StoredRefreshToken) error
+	RotateRefreshToken(
+		ctx context.Context,
+		oldTokenHash []byte,
+		newToken StoredRefreshToken,
+	) (int, error)
 }
 
 type PasswordHasher interface {
@@ -51,6 +58,10 @@ type PasswordHasher interface {
 type TokenIssuer interface {
 	Issue() (IssuedToken, error)
 	Hash(rawToken string) []byte
+}
+
+type AccessTokenIssuer interface {
+	Issue(userID int, jwtID string) (string, error)
 }
 
 type IssuedToken struct {
@@ -104,16 +115,44 @@ type PasswordResetRequest struct {
 	CreatedAt     time.Time
 }
 
+type StoredRefreshToken struct {
+	AccountUserID int
+	FamilyID      string
+	TokenHash     []byte
+	ExpiresAt     time.Time
+	CreatedAt     time.Time
+}
+
+type TokenPair struct {
+	AccessToken  string
+	RefreshToken string
+	TokenType    string
+	ExpiresIn    int
+}
+
+type IdentityOption func(*IdentityService)
+
+func WithAccessTokenIssuer(issuer AccessTokenIssuer) IdentityOption {
+	return func(service *IdentityService) {
+		service.accessTokenIssuer = issuer
+	}
+}
+
 func NewIdentityService(
 	registrationRepository RegistrationRepository,
 	passwordHasher PasswordHasher,
 	tokenIssuer TokenIssuer,
 	now func() time.Time,
+	options ...IdentityOption,
 ) *IdentityService {
-	return &IdentityService{
+	service := &IdentityService{
 		registrationRepository: registrationRepository,
 		passwordHasher:         passwordHasher,
 		tokenIssuer:            tokenIssuer,
 		now:                    now,
 	}
+	for _, option := range options {
+		option(service)
+	}
+	return service
 }

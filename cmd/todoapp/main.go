@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -21,6 +22,10 @@ import (
 	identity_service "github.com/LisLisich/RESTAPI/internal/features/identity/service"
 	identity_transport_http "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http"
 	identity_http_middleware "github.com/LisLisich/RESTAPI/internal/features/identity/transport/http/middleware"
+	payments_yookassa_provider "github.com/LisLisich/RESTAPI/internal/features/payments/provider/yookassa"
+	payments_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/payments/repository/postgres"
+	payments_service "github.com/LisLisich/RESTAPI/internal/features/payments/service"
+	payments_transport_http "github.com/LisLisich/RESTAPI/internal/features/payments/transport/http"
 	statistics_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/statistics/repository/postgres"
 	statistics_service "github.com/LisLisich/RESTAPI/internal/features/statistics/service"
 	statistics_transport_http "github.com/LisLisich/RESTAPI/internal/features/statistics/transport/http"
@@ -127,6 +132,29 @@ func main() {
 		authenticationMiddleware,
 	)
 
+	yooKassaConfig := payments_yookassa_provider.NewConfigMust()
+	var paymentsTransportHTTP *payments_transport_http.PaymentHTTPHandler
+	if yooKassaConfig.Enabled {
+		logger.Debug("initializing feature", zap.String("feature", "payments"))
+		paymentProvider := payments_yookassa_provider.NewClient(
+			yooKassaConfig.APIURL,
+			yooKassaConfig.ShopID,
+			yooKassaConfig.SecretKey,
+			&http.Client{Timeout: 15 * time.Second},
+		)
+		paymentRepository := payments_postgres_repository.NewPaymentRepository(pool)
+		paymentService := payments_service.NewPaymentService(
+			paymentRepository,
+			paymentProvider,
+			yooKassaConfig.ReturnURL,
+			time.Now,
+		)
+		paymentsTransportHTTP = payments_transport_http.NewPaymentHTTPHandler(
+			paymentService,
+			authenticationMiddleware,
+		)
+	}
+
 	logger.Debug("initializing feature", zap.String("initializing", "feature"))
 	statisticsRepository := statistics_postgres_repository.NewStatisticsRepository(pool)
 	statisticsService := statistics_service.NewStatisticsService(statisticsRepository)
@@ -158,6 +186,9 @@ func main() {
 	apiVersionRouterV2.RegisterRoutes(identityTransportHTTP.Routes()...)
 	apiVersionRouterV2.RegisterRoutes(tasksTransportHTTPV2.Routes()...)
 	apiVersionRouterV2.RegisterRoutes(walletTransportHTTP.Routes()...)
+	if paymentsTransportHTTP != nil {
+		apiVersionRouterV2.RegisterRoutes(paymentsTransportHTTP.Routes()...)
+	}
 
 	httpServer.RegisterAPIRouters(
 		apiVersionRouterV1,

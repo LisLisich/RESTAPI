@@ -29,6 +29,9 @@ import (
 	users_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/users/repository/postgres"
 	users_service "github.com/LisLisich/RESTAPI/internal/features/users/service"
 	users_transport_http "github.com/LisLisich/RESTAPI/internal/features/users/transport/http"
+	wallet_postgres_repository "github.com/LisLisich/RESTAPI/internal/features/wallet/repository/postgres"
+	wallet_service "github.com/LisLisich/RESTAPI/internal/features/wallet/service"
+	wallet_transport_http "github.com/LisLisich/RESTAPI/internal/features/wallet/transport/http"
 	web_fs_repository "github.com/LisLisich/RESTAPI/internal/features/web/repository/file_system"
 	web_service "github.com/LisLisich/RESTAPI/internal/features/web/service"
 	web_transport_http "github.com/LisLisich/RESTAPI/internal/features/web/transport/http"
@@ -103,6 +106,14 @@ func main() {
 		sessionMiddleware,
 	)
 
+	logger.Debug("initializing feature", zap.String("feature", "wallet"))
+	walletRepository := wallet_postgres_repository.NewWalletRepository(pool)
+	walletService := wallet_service.NewWalletService(walletRepository)
+	walletTransportHTTP := wallet_transport_http.NewWalletHTTPHandler(
+		walletService,
+		sessionMiddleware,
+	)
+
 	logger.Debug("initializing feature", zap.String("initializing", "feature"))
 	statisticsRepository := statistics_postgres_repository.NewStatisticsRepository(pool)
 	statisticsService := statistics_service.NewStatisticsService(statisticsRepository)
@@ -133,6 +144,7 @@ func main() {
 	apiVersionRouterV2 := core_http_server.NewAPIVersionRouter(core_http_server.ApiVersion2)
 	apiVersionRouterV2.RegisterRoutes(identityTransportHTTP.Routes()...)
 	apiVersionRouterV2.RegisterRoutes(tasksTransportHTTPV2.Routes()...)
+	apiVersionRouterV2.RegisterRoutes(walletTransportHTTP.Routes()...)
 
 	httpServer.RegisterAPIRouters(
 		apiVersionRouterV1,

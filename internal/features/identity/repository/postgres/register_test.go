@@ -144,12 +144,13 @@ func TestRegisterPersistsIdentityAtomically(t *testing.T) {
 	if !strings.Contains(tx.querySQL, "INSERT INTO todoapp.users") {
 		t.Fatalf("expected user insert, got %q", tx.querySQL)
 	}
-	if len(tx.execSQL) != 4 {
-		t.Fatalf("expected 4 dependent inserts, got %d", len(tx.execSQL))
+	if len(tx.execSQL) != 5 {
+		t.Fatalf("expected 5 dependent inserts, got %d", len(tx.execSQL))
 	}
 	expectedTables := []string{
 		"todoapp.accounts",
 		"todoapp.password_credentials",
+		"todoapp.wallets",
 		"todoapp.account_tokens",
 		"todoapp.outbox_events",
 	}
@@ -161,12 +162,15 @@ func TestRegisterPersistsIdentityAtomically(t *testing.T) {
 	if got := tx.execArgs[1][1]; got != registration.PasswordHash {
 		t.Fatalf("expected password hash argument, got %v", got)
 	}
-	if got := tx.execArgs[2][2]; string(got.([]byte)) != "verification-hash" {
+	if got := tx.execArgs[2][1]; got != int64(0) {
+		t.Fatalf("expected zero wallet balance, got %v", got)
+	}
+	if got := tx.execArgs[3][2]; string(got.([]byte)) != "verification-hash" {
 		t.Fatalf("expected token hash argument, got %v", got)
 	}
-	outboxPayload, ok := tx.execArgs[3][3].([]byte)
+	outboxPayload, ok := tx.execArgs[4][3].([]byte)
 	if !ok {
-		t.Fatalf("expected JSON payload bytes, got %T", tx.execArgs[3][3])
+		t.Fatalf("expected JSON payload bytes, got %T", tx.execArgs[4][3])
 	}
 	if !strings.Contains(string(outboxPayload), registration.VerificationToken.Raw) {
 		t.Fatal("expected raw verification token only in outbox payload")

@@ -94,6 +94,27 @@ func (r *IdentityRepository) Register(
 		return domain.Account{}, mapRegistrationError("insert password credential", err)
 	}
 
+	const insertWallet = `
+		INSERT INTO todoapp.wallets (
+			account_user_id,
+			balance_minor,
+			currency,
+			created_at,
+			updated_at
+		)
+		VALUES ($1, $2, $3, $4, $4);
+	`
+	if _, err := tx.Exec(
+		ctx,
+		insertWallet,
+		userID,
+		int64(0),
+		domain.CurrencyRUB,
+		registration.CreatedAt,
+	); err != nil {
+		return domain.Account{}, mapRegistrationError("insert wallet", err)
+	}
+
 	const insertVerificationToken = `
 		INSERT INTO todoapp.account_tokens (
 			account_user_id,
